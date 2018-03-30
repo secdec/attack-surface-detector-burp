@@ -125,35 +125,37 @@ public class BurpExtender implements IBurpExtender, ITab
         importExportPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
         mainPanel.add(importExportPanel, importExportPanelConstraints);
 
-        JScrollPane endpointTablePain = buildEndpointsTable();
-        callbacks.customizeUiComponent(endpointTablePain);
-        GridBagConstraints endpointTablePainConstraints = new GridBagConstraints();
-        endpointTablePainConstraints.gridx = 0;
-        endpointTablePainConstraints.gridy = yPosition++;
-        endpointTablePainConstraints.insets = mainPanelInsets;
-        endpointTablePainConstraints.fill = GridBagConstraints.HORIZONTAL;
-        endpointTablePainConstraints.anchor = GridBagConstraints.NORTHWEST;
-        mainPanel.add(endpointTablePain, endpointTablePainConstraints);
+        JLabel countLabel = new JLabel();
+        callbacks.customizeUiComponent(countLabel);
+        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
+        countLabel.setBorder(null);
+        countLabel.setText(" ");
+        importExportPanelConstraints = new GridBagConstraints();
+        importExportPanelConstraints.gridx = 0;
+        importExportPanelConstraints.gridy = yPosition++;
+        importExportPanelConstraints.ipadx = 5;
+        importExportPanelConstraints.ipady = 5;
+        importExportPanelConstraints.insets = mainPanelInsets;
+        importExportPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        mainPanel.add(countLabel, importExportPanelConstraints);
 
-        JScrollPane countPain = buildCountPane();
-        callbacks.customizeUiComponent(countPain);
-        GridBagConstraints countPainConstraints = new GridBagConstraints();
-        countPainConstraints.gridx = 0;
-        countPainConstraints.gridy = yPosition++;
-        countPainConstraints.insets = mainPanelInsets;
-        countPainConstraints.fill = GridBagConstraints.HORIZONTAL;
-        countPainConstraints.anchor = GridBagConstraints.NORTHWEST;
-        mainPanel.add(countPain, countPainConstraints);
-
-        JSeparator importExportPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
-        callbacks.customizeUiComponent(importExportPanelSeparator);
-        GridBagConstraints importExportPanelSeparatorConstraints = new GridBagConstraints();
-        importExportPanelSeparatorConstraints.gridx = 0;
-        importExportPanelSeparatorConstraints.gridy = yPosition++;
-        importExportPanelSeparatorConstraints.insets = mainPanelInsets;
-        importExportPanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
-        importExportPanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
-        mainPanel.add(importExportPanelSeparator, importExportPanelSeparatorConstraints);
+        JScrollPane endpointTablePane = buildEndpointsTable();
+        callbacks.customizeUiComponent(endpointTablePane);
+        //
+        // GridBagConstraints endpointTablePainConstraints = new GridBagConstraints();
+/*
+        JScrollPane countPane = buildCountPane();
+        callbacks.customizeUiComponent(countPane);
+        GridBagConstraints countConstraints = new GridBagConstraints();
+        countConstraints.gridx = 0;
+        countConstraints.gridy = yPosition++;
+        countConstraints.insets = mainPanelInsets;
+        countConstraints.fill = GridBagConstraints.BOTH;
+        countConstraints.weightx = 1.0;
+        countConstraints.weighty = 1.0;
+        countConstraints.anchor = GridBagConstraints.NORTH;
+        mainPanel.add(countPane, countConstraints);
+        */
 
         JScrollPane displayPane = buildDisplayPane();
         callbacks.customizeUiComponent(displayPane);
@@ -161,12 +163,13 @@ public class BurpExtender implements IBurpExtender, ITab
         displayConstraints.gridx = 0;
         displayConstraints.gridy = yPosition++;
         displayConstraints.insets = mainPanelInsets;
-        displayConstraints.fill = GridBagConstraints.HORIZONTAL;
+        displayConstraints.fill = GridBagConstraints.BOTH;
         displayConstraints.weightx = 1.0;
         displayConstraints.weighty = 1.0;
         displayConstraints.anchor = GridBagConstraints.NORTH;
-        //displayConstraints.gridheight = 200;
-        mainPanel.add(displayPane, displayConstraints);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, endpointTablePane, displayPane);
+        mainPanel.add(splitPane, displayConstraints);
 
 
 
@@ -275,6 +278,7 @@ public class BurpExtender implements IBurpExtender, ITab
         displayArea.setEditable(false);
         return new JScrollPane(displayArea);
 
+
     }
 
     private JScrollPane buildCountPane()
@@ -380,8 +384,13 @@ public class BurpExtender implements IBurpExtender, ITab
         endpointsTable.setFillsViewportHeight(true);
         callbacks.customizeUiComponent(endpointsTable);
         BurpPropertiesManager.getBurpPropertiesManager().setEndpointsTable(endpointsTable);
+
+
         return endpointsTablePane;
+
+
     }
+
 
     private JPanel buildImportExportPanel()
     {
@@ -410,9 +419,37 @@ public class BurpExtender implements IBurpExtender, ITab
 
 
         importExportPanel.add(localEndpointsButton, gridBagConstraintsLocal);
+/*
+        JLabel bufferLabel = new JLabel();
+        bufferLabel.setBorder(null);
+        bufferLabel.setText(" ");
+        gridBagConstraintsLocal = new GridBagConstraints();
+        gridBagConstraintsLocal.gridwidth = 1;
+        gridBagConstraintsLocal.gridx = 1;
+        gridBagConstraintsLocal.gridy = ++yPosition;
+        gridBagConstraintsLocal.ipadx = 5;
+        gridBagConstraintsLocal.ipady = 5;
+        gridBagConstraintsLocal.anchor = GridBagConstraints.SOUTHWEST;
+        importExportPanel.add(bufferLabel, gridBagConstraintsLocal);
 
 
 
+        JLabel countLabel = new JLabel();
+        callbacks.customizeUiComponent(countLabel);
+        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
+        countLabel.setBorder(null);
+        countLabel.setText(" ");
+
+        gridBagConstraintsLocal = new GridBagConstraints();
+        gridBagConstraintsLocal.gridwidth = 1;
+        gridBagConstraintsLocal.gridx = 1;
+        gridBagConstraintsLocal.gridy = ++yPosition;
+        gridBagConstraintsLocal.ipadx = 5;
+        gridBagConstraintsLocal.ipady = 5;
+        gridBagConstraintsLocal.anchor = GridBagConstraints.SOUTHWEST;
+
+        importExportPanel.add(countLabel, gridBagConstraintsLocal);
+        */
         return importExportPanel;
     }
 
