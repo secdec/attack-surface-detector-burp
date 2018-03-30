@@ -1,0 +1,68 @@
+Copyright 2016-2017 Secure Decisions, a division of Applied Visions, Inc. 
+
+This material is based on research sponsored by the Department of Homeland Security (DHS) Science and Technology Directorate, Cyber Security Division (DHS S&T/CSD) via contract number HHSP233201600058C.
+
+The following components are included in this product:
+
+EntityFramework 6.1.3
+Copyright Microsoft, Inc.
+Licensed under https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm
+Website: https://msdn.microsoft.com/en-us/library/aa937723(v=vs.113).aspx
+
+EntityFramework6.Npgsql 3.1.1
+Copyright (c) 2002-2016, The Npgsql Development Team
+Licensed under https://github.com/npgsql/EntityFramework6.Npgsql/blob/219cb11d44a984c55421f2e6387c16a90806a365/LICENSE.txt
+Website: http://www.npgsql.org/
+
+Google.Protobuf 3.1.0
+Copyright 2014, Google Inc. All rights reserved.
+Licensed under https://github.com/google/protobuf/blob/2a50e67c7879dd590d4727fb3130987127c65a45/LICENSE
+Website: https://developers.google.com/protocol-buffers/
+
+log4net 2.0.7
+Copyright 2004-2017 The Apache Software Foundation
+Licensed under http://logging.apache.org/log4net/license.html
+Website: http://logging.apache.org/log4net/
+
+Microsoft.AspNet.WebApi 5.2.3
+Microsoft.AspNet.WebApi.Client 5.2.3
+Microsoft.AspNet.WebApi.Core 5.2.3
+Microsoft.AspNet.WebApi.Owin 5.2.3
+Microsoft.AspNet.WebApi.OwinSelfHost 5.2.3
+Microsoft.AspNet.WebApi.WebHost 5.2.3
+© Microsoft Corporation. All rights reserved.
+Licensed under https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm
+Website: https://www.asp.net/web-api
+
+Microsoft.CodeDom.Providers.DotNetCompilerPlatform 1.0.0
+© Microsoft Corporation. All rights reserved.
+Licensed under https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm
+Website: https://www.asp.net/
+
+Microsoft.Owin 2.0.2
+Microsoft.Owin.Host.HttpListener 2.0.2
+Microsoft.Owin.Hosting 2.0.2
+Copyright Microsoft, Inc.
+Licensed under https://www.microsoft.com/web/webpi/eula/aspnetcomponent_rtw_enu.htm
+Website: https://github.com/aspnet/AspNetKatana/
+
+Mono.Options 4.4.0
+Copyright (c) 2016 Xamarin, Inc.
+Licensed under https://components.xamarin.com/license/mono.options
+Website: 
+
+Newtonsoft.Json 6.0.4
+Copyright (c) 2007 James Newton-King
+Licensed under https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md
+Website: http://www.newtonsoft.com/json
+
+Npgsql 3.1.2
+Copyright (c) 2002-2016, The Npgsql Development Team
+Licensed under https://github.com/npgsql/npgsql/blob/c195d1e995d63c6d2ce7d6717db857c7413e4203/LICENSE.txt
+Website: http://www.npgsql.org/
+
+Owin 1.0.0
+Copyright 2012 Louis DeJardin
+Copyright 2012 Chris Ross
+Licensed under https://github.com/owin-contrib/owin-hosting/blob/fe947963e687f6b6b63d27e70686f3ea46ed9882/LICENSE.txt
+Website: https://github.com/owin-contrib/owin-hosting/
