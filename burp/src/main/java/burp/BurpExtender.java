@@ -125,39 +125,10 @@ public class BurpExtender implements IBurpExtender, ITab
         importExportPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
         mainPanel.add(importExportPanel, importExportPanelConstraints);
 
-        JLabel countLabel = new JLabel();
-        callbacks.customizeUiComponent(countLabel);
-        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
-        countLabel.setBorder(null);
-        countLabel.setText(" ");
-        importExportPanelConstraints = new GridBagConstraints();
-        importExportPanelConstraints.gridx = 0;
-        importExportPanelConstraints.gridy = yPosition++;
-        importExportPanelConstraints.ipadx = 5;
-        importExportPanelConstraints.ipady = 5;
-        importExportPanelConstraints.insets = mainPanelInsets;
-        importExportPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
-        mainPanel.add(countLabel, importExportPanelConstraints);
-
-        JScrollPane endpointTablePane = buildEndpointsTable();
+        JPanel endpointTablePane = buildEndpointsTable();
         callbacks.customizeUiComponent(endpointTablePane);
-        //
-        // GridBagConstraints endpointTablePainConstraints = new GridBagConstraints();
-/*
-        JScrollPane countPane = buildCountPane();
-        callbacks.customizeUiComponent(countPane);
-        GridBagConstraints countConstraints = new GridBagConstraints();
-        countConstraints.gridx = 0;
-        countConstraints.gridy = yPosition++;
-        countConstraints.insets = mainPanelInsets;
-        countConstraints.fill = GridBagConstraints.BOTH;
-        countConstraints.weightx = 1.0;
-        countConstraints.weighty = 1.0;
-        countConstraints.anchor = GridBagConstraints.NORTH;
-        mainPanel.add(countPane, countConstraints);
-        */
 
-        JScrollPane displayPane = buildDisplayPane();
+        JPanel displayPane = buildDisplayPane();
         callbacks.customizeUiComponent(displayPane);
         GridBagConstraints displayConstraints = new GridBagConstraints();
         displayConstraints.gridx = 0;
@@ -170,8 +141,6 @@ public class BurpExtender implements IBurpExtender, ITab
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, endpointTablePane, displayPane);
         mainPanel.add(splitPane, displayConstraints);
-
-
 
         return mainPanel;
     }
@@ -271,31 +240,25 @@ public class BurpExtender implements IBurpExtender, ITab
     }
 
 
-    private JScrollPane buildDisplayPane()
+    private JPanel buildDisplayPane()
     {
+        final JLabel panelTitle = new JLabel("Selected Endpoint", JLabel.LEFT);
+        panelTitle.setForeground(new Color(236, 136, 0));
+        Font font = panelTitle.getFont();
+        panelTitle.setFont(new Font(font.getFontName(), font.getStyle(), font.getSize() + 4));
+        panelTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        JPanel basePanel = new JPanel();
+        basePanel.setLayout(new BorderLayout());
         displayArea.setText("\n" + "\n" + "\n" + "\n" + "\n" + "\n");
         callbacks.customizeUiComponent(displayArea);
         displayArea.setEditable(false);
-        return new JScrollPane(displayArea);
-
-
+        JLabel titleLabel = new JLabel("Selected Endpoint");
+        basePanel.add(panelTitle, BorderLayout.PAGE_START);
+        basePanel.add(new JScrollPane(displayArea), BorderLayout.CENTER);
+        return basePanel;
     }
 
-    private JScrollPane buildCountPane()
-    {
-        JLabel countLabel = new JLabel();
-        callbacks.customizeUiComponent(countLabel);
-        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
-        countLabel.setBorder(null);
-        JScrollPane countPane =  new JScrollPane(countLabel);
-        countLabel.setText(" ");
-        countPane.setBorder(null);
-
-        return countPane;
-
-    }
-
-    private JScrollPane buildEndpointsTable()
+    private JPanel buildEndpointsTable()
     {
         Object[][] data = {};
         String[] columnNames =
@@ -309,10 +272,7 @@ public class BurpExtender implements IBurpExtender, ITab
         DefaultTableModel dtm = new DefaultTableModel(data, columnNames){
 
             @Override
-            public boolean isCellEditable(int row, int column) {
-                //all cells false
-                return false;
-            }
+            public boolean isCellEditable(int row, int column) { return false; }
         };
 
         JTable endpointsTable = new JTable(dtm);
@@ -328,46 +288,23 @@ public class BurpExtender implements IBurpExtender, ITab
                 // TODO - Gather all Endpoint objects pointing to the same endpoint and output their HTTP methods (Endpoints only have
                 //  one HTTP method at a time now)
                 if(endpoint.getHttpMethod().length() >4)
-                {
-                        displayArea.append(endpoint.getHttpMethod().substring(14));
-                        //JOptionPane.showMessageDialog(null,endpoint.getHttpMethod().split(".")[0]);
-
-                }
+                    displayArea.append(endpoint.getHttpMethod().substring(14));
                 else
                     displayArea.append(endpoint.getHttpMethod());
 
 
                 displayArea.append("\n" + "Parameters and type:" + "\n");
                 for(Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
-                {
-                   displayArea.append(parameter.getKey() + " - " + parameter.getValue().getDataType().getDisplayName()
-                           + "\n");
-                }
+                   displayArea.append(parameter.getKey() + " - " + parameter.getValue().getDataType().getDisplayName() + "\n");
             }
-
             @Override
-            public void mousePressed(MouseEvent e)
-            {
-
-            }
-
+            public void mousePressed(MouseEvent e) { }
             @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
-            }
-
+            public void mouseReleased(MouseEvent e) { }
             @Override
-            public void mouseEntered(MouseEvent e)
-            {
-
-            }
-
+            public void mouseEntered(MouseEvent e) { }
             @Override
-            public void mouseExited(MouseEvent e)
-            {
-
-            }
+            public void mouseExited(MouseEvent e) { }
         });
 
         TableColumn tc = endpointsTable.getColumnModel().getColumn(2);
@@ -385,9 +322,17 @@ public class BurpExtender implements IBurpExtender, ITab
         callbacks.customizeUiComponent(endpointsTable);
         BurpPropertiesManager.getBurpPropertiesManager().setEndpointsTable(endpointsTable);
 
+        JPanel basePanel = new JPanel();
+        basePanel.setLayout(new BorderLayout());
+        JLabel countLabel = new JLabel();
+        callbacks.customizeUiComponent(countLabel);
+        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
+        countLabel.setBorder(null);
+        countLabel.setText(" ");
+        basePanel.add(countLabel, BorderLayout.PAGE_START);
+        basePanel.add(endpointsTablePane, BorderLayout.CENTER);
 
-        return endpointsTablePane;
-
+        return basePanel;
 
     }
 
@@ -416,40 +361,7 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraintsLocal.ipady = 5;
         gridBagConstraintsLocal.anchor = GridBagConstraints.NORTHWEST;
 
-
-
         importExportPanel.add(localEndpointsButton, gridBagConstraintsLocal);
-/*
-        JLabel bufferLabel = new JLabel();
-        bufferLabel.setBorder(null);
-        bufferLabel.setText(" ");
-        gridBagConstraintsLocal = new GridBagConstraints();
-        gridBagConstraintsLocal.gridwidth = 1;
-        gridBagConstraintsLocal.gridx = 1;
-        gridBagConstraintsLocal.gridy = ++yPosition;
-        gridBagConstraintsLocal.ipadx = 5;
-        gridBagConstraintsLocal.ipady = 5;
-        gridBagConstraintsLocal.anchor = GridBagConstraints.SOUTHWEST;
-        importExportPanel.add(bufferLabel, gridBagConstraintsLocal);
-
-
-
-        JLabel countLabel = new JLabel();
-        callbacks.customizeUiComponent(countLabel);
-        BurpPropertiesManager.getBurpPropertiesManager().setCountLabel(countLabel);
-        countLabel.setBorder(null);
-        countLabel.setText(" ");
-
-        gridBagConstraintsLocal = new GridBagConstraints();
-        gridBagConstraintsLocal.gridwidth = 1;
-        gridBagConstraintsLocal.gridx = 1;
-        gridBagConstraintsLocal.gridy = ++yPosition;
-        gridBagConstraintsLocal.ipadx = 5;
-        gridBagConstraintsLocal.ipady = 5;
-        gridBagConstraintsLocal.anchor = GridBagConstraints.SOUTHWEST;
-
-        importExportPanel.add(countLabel, gridBagConstraintsLocal);
-        */
         return importExportPanel;
     }
 
@@ -599,9 +511,6 @@ public class BurpExtender implements IBurpExtender, ITab
         return autoOptionsPanel;
     }
 
-    //
-    // implement ITab
-    //
 
     @Override
     public String getTabCaption()
