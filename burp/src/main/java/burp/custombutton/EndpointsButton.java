@@ -75,7 +75,6 @@ public abstract class EndpointsButton extends JButton {
                         callbacks.loadConfigFromJson(getBurpConfigAsString());
                     }
                     Endpoint.Info[] endpoints = getEndpoints();
-                    logEndpoints(view, endpoints);
                     fillEndpointsToTable(endpoints);
                     if (endpoints.length == 0) {
                         JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning",
@@ -295,24 +294,6 @@ public abstract class EndpointsButton extends JButton {
         BurpPropertiesManager.getBurpPropertiesManager().setRequests(requests);
     }
 
-    public void logEndpoints(final Component view, Endpoint.Info[] endpoints) {
-        try
-        {
-            FileWriter writer = new FileWriter(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory()+"/AttackSurfaceDetectorlogfile.txt", false);
-            PrintWriter printer = new PrintWriter(writer);
-            for(Endpoint.Info endpoint : endpoints)
-            {
-                printer.printf("%s" + "%n", endpoint.getUrlPath());
-            }
-
-            printer.close();
-
-        }
-        catch (Exception ge)
-        {
-            JOptionPane.showMessageDialog(view, ge.getMessage(),"Warning", JOptionPane.WARNING_MESSAGE);
-        }
-    }
     protected abstract String getButtonText();
 
     protected abstract String getNoEndpointsMessage();
