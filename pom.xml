@@ -64,6 +64,11 @@
             <name>Tyler Camp</name>
             <email>tylerc@avi.com</email>
         </developer>
+        <developer>
+            <id>matthewd</id>
+            <name>Matthew DeLetto</name>
+            <email>matthewd@avi.com</email>
+        </developer>
     </developers>
 
     <organization>
