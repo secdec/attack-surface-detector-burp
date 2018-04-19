@@ -46,8 +46,8 @@ public class ConfigurationDialogs {
             {
                 JPanel sourcePanel = new JPanel();
                 JLabel sourcePanelDescription = new JLabel("This setting lets you configure the location of your source code.");
-                JLabel sourcePanelLabel = new JLabel("Location of source code folder                                         ");
-                final JButton sourceFolderBrowseButton = new JButton("Select folder ...");
+                JLabel sourcePanelLabel = new JLabel("Source code                                                            ");
+                final JButton sourceFolderBrowseButton = new JButton("Select folder or zip file...");
                 JTextField sourceFolderField = new JTextField();
                 IBurpExtenderCallbacks callbacks =  BurpPropertiesManager.getBurpPropertiesManager().getCallbacks();
                 callbacks.customizeUiComponent(sourceFolderField);
@@ -60,7 +60,7 @@ public class ConfigurationDialogs {
                             currentDirectory = System.getProperty("user.home");
                         }
                         chooser.setCurrentDirectory(new java.io.File(currentDirectory));
-                        chooser.setDialogTitle("Please select the folder containing the source code");
+                        chooser.setDialogTitle("Please select the folder or zip file containing the source code");
                         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                         chooser.setAcceptAllFileFilterUsed(false);
                         if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {

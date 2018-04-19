@@ -374,7 +374,7 @@ public class BurpExtender implements IBurpExtender, ITab
         final JLabel sourcePanelTitle = addPanelTitleToGridBagLayout("Local Source Code", sourcePanel, yPosition++);
         final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("This setting lets you configure the location of your source code.", sourcePanel, yPosition++);
 
-        final JButton sourceFolderBrowseButton = new JButton("Select folder ...");
+        final JButton sourceFolderBrowseButton = new JButton("Select folder or zip file ...");
         sourceFolderBrowseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -393,7 +393,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 }
             }
         });
-        sourceFolderField = addTextFieldToGridBagLayout("Location of source code folder:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
+        sourceFolderField = addTextFieldToGridBagLayout("Source code:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
 
         return sourcePanel;
     }
