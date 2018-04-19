@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-ham</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.9</version>
         </dependency>
         <dependency>
             <groupId>org.owasp</groupId>

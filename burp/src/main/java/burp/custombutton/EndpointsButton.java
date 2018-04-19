@@ -73,13 +73,12 @@ public abstract class EndpointsButton extends JButton {
                     if (BurpPropertiesManager.getBurpPropertiesManager().getConfigFile() != null ) {
                         callbacks.loadConfigFromJson(getBurpConfigAsString());
                     }
-                    Endpoint.Info[] endpoints = getEndpoints();
-                    fillEndpointsToTable(endpoints);
+                    Endpoint.Info[] endpoints = getEndpoints(view);
                     if (endpoints.length == 0) {
                         JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning",
                                 JOptionPane.WARNING_MESSAGE);
-
                     } else {
+                        fillEndpointsToTable(endpoints);
                         for (Endpoint.Info endpoint : endpoints) {
                             if (endpoint != null) {
                                 String endpointPath = endpoint.getUrlPath();
@@ -301,5 +300,5 @@ public abstract class EndpointsButton extends JButton {
 
     protected abstract ConfigurationDialogs.DialogMode getDialogMode();
 
-    protected abstract Endpoint.Info[] getEndpoints();
+    protected abstract Endpoint.Info[] getEndpoints(final Component view);
 }

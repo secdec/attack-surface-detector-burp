@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.util.EndpointUtil;
 
+import javax.swing.JOptionPane;
 import java.awt.*;
 
 public class LocalEndpointsButton extends EndpointsButton {
@@ -61,7 +62,8 @@ public class LocalEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected Endpoint.Info[] getEndpoints() {
+    protected Endpoint.Info[] getEndpoints(final Component view) {
+
         EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder());
 
         Endpoint.Info[] endpoints = null;
@@ -74,7 +76,6 @@ public class LocalEndpointsButton extends EndpointsButton {
                 endpoints[i++] = Endpoint.Info.fromEndpoint(endpoint);
             }
         }
-
         return endpoints;
     }
 }

@@ -385,7 +385,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 }
                 chooser.setCurrentDirectory(new java.io.File(currentDirectory));
                 chooser.setDialogTitle("Please select the folder containing the source code");
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.setAcceptAllFileFilterUsed(false);
                 if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
                     sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
