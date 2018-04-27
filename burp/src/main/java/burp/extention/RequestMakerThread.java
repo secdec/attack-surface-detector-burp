@@ -22,9 +22,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 package burp.extention;
 
-import burp.IBurpExtenderCallbacks;
-import burp.IHttpRequestResponse;
-import burp.IHttpService;
+import burp.*;
 import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
@@ -48,14 +46,28 @@ public class RequestMakerThread implements Runnable
     {
         try
         {
-            HashMap<byte[], IHttpService> requests = BurpPropertiesManager.getBurpPropertiesManager().getRequests();
-            Set<Map.Entry<byte[], IHttpService>> st = requests.entrySet();
+            HashMap<RequestDecorator, IHttpService> requests = BurpPropertiesManager.getBurpPropertiesManager().getRequests();
+            Set<Map.Entry<RequestDecorator, IHttpService>> st = requests.entrySet();
             int i = 1;
-            for (Map.Entry<byte[], IHttpService> me : st)
+            for (Map.Entry<RequestDecorator, IHttpService> me : st)
             {
-                IHttpRequestResponse reqRep = callbacks.makeHttpRequest(me.getValue(),me.getKey());
-                reqRep.setHighlight("cyan");
-                reqRep.setComment("Generated from source code analysis");
+                IHttpRequestResponse reqRep = callbacks.makeHttpRequest(me.getValue(),me.getKey().getRequest());
+                if(me.getKey().getModified() == EndpointDecorator.Status.CHANGED)
+                {
+                    reqRep.setHighlight("magenta");
+                    reqRep.setComment("Modified endpoint detected by Attack Surface Difference Generator");
+                }
+                else if(me.getKey().getModified() == EndpointDecorator.Status.NEW)
+                {
+                    reqRep.setHighlight("orange");
+                    reqRep.setComment("New endpoint detected by Attack Surface Difference Generator");
+                }
+                else
+                {
+                    reqRep.setHighlight("cyan");
+                    reqRep.setComment("Endpoint detected by Attack Surface Detector");
+                }
+
                 callbacks.addToSiteMap(reqRep);
 
             }

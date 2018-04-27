@@ -53,6 +53,7 @@ public class BurpExtender implements IBurpExtender, ITab
     private IExtensionHelpers helpers;
     private JTabbedPane tabbedPane;
     private JTextField sourceFolderField;
+    private JTextField oldSourceFolderField;
     private JTextField configFileField;
     private JTextField targetHostField;
     private JTextField targetPathField;
@@ -62,7 +63,8 @@ public class BurpExtender implements IBurpExtender, ITab
     private JCheckBox useHttpField;
     private JLabel profMessage;
     private JLabel autoScanText;
-    private JTextArea displayArea = new JTextArea();
+    //private JTextArea displayArea = new JTextArea();
+    private JLabel displayArea = new JLabel();
 
     //
     // implement IBurpExtender
@@ -249,12 +251,21 @@ public class BurpExtender implements IBurpExtender, ITab
         panelTitle.setHorizontalAlignment(SwingConstants.LEFT);
         JPanel basePanel = new JPanel();
         basePanel.setLayout(new BorderLayout());
-        displayArea.setText("\n" + "\n" + "\n" + "\n" + "\n" + "\n");
+        //displayArea.setText("\n" + "\n" + "\n" + "\n" + "\n" + "\n");
         callbacks.customizeUiComponent(displayArea);
-        displayArea.setEditable(false);
+        //displayArea.setEditable(false);
         JLabel titleLabel = new JLabel("Selected Endpoint");
         basePanel.add(panelTitle, BorderLayout.PAGE_START);
-        basePanel.add(new JScrollPane(displayArea), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane();
+        JPanel displayPanel = new JPanel();
+        displayPanel.setLayout(new BorderLayout());
+        displayArea.setHorizontalAlignment(SwingConstants.LEFT);
+        displayPanel.add(displayArea,BorderLayout.PAGE_START);
+        JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane.setViewportView(displayPanel);
+        //basePanel.add(new JScrollPane(displayArea), BorderLayout.CENTER);
+        //basePanel.add(new JScrollPane(displayPanel), BorderLayout.CENTER);
+        basePanel.add(scrollPane, BorderLayout.CENTER);
         return basePanel;
     }
 
@@ -263,10 +274,11 @@ public class BurpExtender implements IBurpExtender, ITab
         Object[][] data = {};
         String[] columnNames =
                 {"Detected Endpoints",
-                "Number of Detected Parameters",
-                "GET Method",
-                "POST Method",
-                "Endpoint"
+                        "Number of Detected Parameters",
+                        "GET Method",
+                        "POST Method",
+                        "New/Modified",
+                        "Endpoint"
                 };
 
         DefaultTableModel dtm = new DefaultTableModel(data, columnNames){
@@ -281,21 +293,76 @@ public class BurpExtender implements IBurpExtender, ITab
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                Endpoint.Info endpoint = (Endpoint.Info)endpointsTable.getModel().getValueAt(endpointsTable.getSelectedRow(), 4);
-                displayArea.setText("URL:" + "\n");
-                displayArea.append(endpoint.getUrlPath() + "\n" + "\n");
-                displayArea.append("Methods: " + "\n" );
+                String displayStr = new String();
+                displayArea.setText(displayStr);
+                EndpointDecorator decorator = (EndpointDecorator)endpointsTable.getModel().getValueAt(endpointsTable.getSelectedRow(), 5);
+                Endpoint.Info endpoint = decorator.getEndpoint();
+                if(decorator.getStatus() == EndpointDecorator.Status.NEW)
+                {
+                    displayStr = "<html><b>New Endpoint</b><br>";
+                    displayStr = displayStr + "URL:<br>";
+                }
+                else
+                    displayStr = displayStr + "<html> URL:<br>";
+
+                displayStr = displayStr + "" + endpoint.getUrlPath() + "<br><br>Methods:<br>";
                 // TODO - Gather all Endpoint objects pointing to the same endpoint and output their HTTP methods (Endpoints only have
                 //  one HTTP method at a time now)
                 if(endpoint.getHttpMethod().length() >4)
-                    displayArea.append(endpoint.getHttpMethod().substring(14));
+                    displayStr = displayStr + endpoint.getHttpMethod().substring(14);
                 else
-                    displayArea.append(endpoint.getHttpMethod());
+                    displayStr = displayStr + endpoint.getHttpMethod();
 
 
-                displayArea.append("\n" + "Parameters and type:" + "\n");
-                for(Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
-                   displayArea.append(parameter.getKey() + " - " + parameter.getValue().getDataType().getDisplayName() + "\n");
+                displayStr = displayStr +"<br>Parameters and type:<br>";
+                if(decorator.getStatus() == EndpointDecorator.Status.CHANGED)
+                {
+                    for (Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
+                    {   boolean found = false;
+                        for (Map.Entry<String, RouteParameter> compParameter : decorator.getComparePoint().getParameters().entrySet())
+                        {
+                            if (parameter.getKey().equalsIgnoreCase(compParameter.getKey()))
+                            {
+                                found = true;
+                                if(!parameter.getValue().getDataType().getDisplayName().equals(compParameter.getValue().getDataType().getDisplayName()))
+                                    displayStr = displayStr + "<strong>" + parameter.getKey() + " - " + compParameter.getValue().getDataType().getDisplayName().toUpperCase() + " -> " + parameter.getValue().getDataType().getDisplayName().toUpperCase()+"</strong> (modified parameter type) <br>";
+                                else
+                                    displayStr = displayStr + parameter.getKey() + " - "+ parameter.getValue().getDataType().getDisplayName() + "<br>";
+                                break;
+                            }
+                        }
+                        if (!found)
+                            displayStr = displayStr + "<strong>" + parameter.getKey() + "</strong> - <strong>" + parameter.getValue().getDataType().getDisplayName().toUpperCase() + "</strong> (added parameter)<br>";
+
+                    }
+                    for (Map.Entry<String, RouteParameter> compParameter : decorator.getComparePoint().getParameters().entrySet())
+                    {   boolean found = false;
+                        for (Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
+                        {
+                            if (parameter.getKey().equalsIgnoreCase(compParameter.getKey()))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(!found)
+                            displayStr = displayStr + "<span style='text-decoration: line-through;'>" +compParameter.getKey() + " - " + compParameter.getValue().getDataType().getDisplayName().toUpperCase() + "</span> (removed parameter)<br>";
+
+
+                    }
+
+                }
+                else
+                {
+                    for (Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
+                    {
+                        displayStr = displayStr + parameter.getKey() + " - "+ parameter.getValue().getDataType().getDisplayName() + "<br>";
+                    }
+                }
+
+                displayStr = displayStr + "</html>";
+                displayArea.setText(displayStr);
+
             }
             @Override
             public void mousePressed(MouseEvent e) { }
@@ -313,9 +380,12 @@ public class BurpExtender implements IBurpExtender, ITab
         tc = endpointsTable.getColumnModel().getColumn(3);
         tc.setCellEditor(endpointsTable.getDefaultEditor(Boolean.class));
         tc.setCellRenderer(endpointsTable.getDefaultRenderer(Boolean.class));
-        endpointsTable.getColumnModel().getColumn(4).setMinWidth(0);
-        endpointsTable.getColumnModel().getColumn(4).setMaxWidth(0);
-        endpointsTable.getColumnModel().getColumn(4).setWidth(0);
+        tc = endpointsTable.getColumnModel().getColumn(4);
+        tc.setCellEditor(endpointsTable.getDefaultEditor(Boolean.class));
+        tc.setCellRenderer(endpointsTable.getDefaultRenderer(Boolean.class));
+        endpointsTable.getColumnModel().getColumn(5).setMinWidth(0);
+        endpointsTable.getColumnModel().getColumn(5).setMaxWidth(0);
+        endpointsTable.getColumnModel().getColumn(5).setWidth(0);
         JScrollPane endpointsTablePane = new JScrollPane(endpointsTable);
 
         endpointsTable.setFillsViewportHeight(true);
@@ -370,9 +440,17 @@ public class BurpExtender implements IBurpExtender, ITab
         final JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new GridBagLayout());
         int yPosition = 0;
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+        JPanel newSourceDialog = new JPanel();
+        newSourceDialog.setLayout(new GridBagLayout());
+        JPanel oldSourceDialog = new JPanel();
+        oldSourceDialog.setLayout(new GridBagLayout());
 
         final JLabel sourcePanelTitle = addPanelTitleToGridBagLayout("Local Source Code", sourcePanel, yPosition++);
         final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("This setting lets you configure the location of your source code.", sourcePanel, yPosition++);
+        final JLabel differenceGeneratorDescription = addPanelDescriptionToGridBagLayout("<html><br>You can optionally choose to compare two different versions of the source code, and the Attack Surface Detector <br>will highlight endpoints and parameters that are new or modified in the newer version of the source code.</html>", sourcePanel, yPosition++);
+        final JLabel sourcePanelDescription2 = addPanelDescriptionToGridBagLayout(" ", sourcePanel, yPosition++);
 
         final JButton sourceFolderBrowseButton = new JButton("Select folder or zip file ...");
         sourceFolderBrowseButton.addActionListener(new ActionListener() {
@@ -394,6 +472,29 @@ public class BurpExtender implements IBurpExtender, ITab
             }
         });
         sourceFolderField = addTextFieldToGridBagLayout("Source code:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
+
+        final JButton oldSourceFolderBrowseButton = new JButton("Select folder or zip file ...");
+        oldSourceFolderBrowseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser2 = new JFileChooser();
+                String currentDirectory = sourceFolderField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser2.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser2.setDialogTitle("Please select the folder containing the source code");
+                chooser2.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                chooser2.setAcceptAllFileFilterUsed(false);
+                if (chooser2.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
+                    oldSourceFolderField.setText(chooser2.getSelectedFile().getAbsolutePath());
+                    BurpPropertiesManager.getBurpPropertiesManager().setOldSourceFolder(oldSourceFolderField.getText());
+                }
+            }
+        });
+
+
+        oldSourceFolderField = addTextFieldToGridBagLayout("<html>Optional<br/>Source code to compare to:</html>", sourcePanel, yPosition++, BurpPropertiesManager.OLD_SOURCE_FOLDER_KEY, oldSourceFolderBrowseButton);
 
         return sourcePanel;
     }
@@ -580,6 +681,7 @@ public class BurpExtender implements IBurpExtender, ITab
     private void loadOptionsProperties() {
         BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
         sourceFolderField.setText(burpPropertiesManager.getSourceFolder());
+        oldSourceFolderField.setText(burpPropertiesManager.getOldSourceFolder());
         configFileField.setText(burpPropertiesManager.getConfigFile());
         targetHostField.setText(burpPropertiesManager.getTargetHost());
         targetPathField.setText(burpPropertiesManager.getTargetPath());
@@ -884,14 +986,14 @@ class PortFilter extends DocumentFilter {
         sb.insert(offset, string);
         int val = Integer.parseInt(sb.toString());
 
-        if (test(sb.toString()) && sb.length() <= maxLength && val <= 65535) {
+        if (isInteger(sb.toString()) && sb.length() <= maxLength && val <= 65535) {
             super.insertString(fb, offset, string, attr);
         } else {
             Toolkit.getDefaultToolkit().beep();
         }
     }
 
-    private boolean test(String text) {
+    private boolean isInteger(String text) {
         try {
             Integer.parseInt(text);
             return true;
@@ -910,7 +1012,7 @@ class PortFilter extends DocumentFilter {
         sb.replace(offset, offset + length, text);
         int val = Integer.parseInt(sb.toString());
 
-        if (test(sb.toString()) && (sb.length() <= maxLength) && val <= 65535) {
+        if (isInteger(sb.toString()) && (sb.length() <= maxLength) && val <= 65535) {
             super.replace(fb, offset, length, text, attrs);
         } else {
             Toolkit.getDefaultToolkit().beep();
@@ -926,7 +1028,7 @@ class PortFilter extends DocumentFilter {
         sb.append(doc.getText(0, doc.getLength()));
         sb.delete(offset, offset + length);
 
-        if ((test(sb.toString()) && (sb.length() <= maxLength)) || (sb.length() == 0)) {
+        if ((isInteger(sb.toString()) && (sb.length() <= maxLength)) || (sb.length() == 0)) {
             super.remove(fb, offset, length);
         } else {
             Toolkit.getDefaultToolkit().beep();

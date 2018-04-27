@@ -29,6 +29,7 @@ package burp.extention;
 
 import burp.IBurpExtenderCallbacks;
 import burp.IHttpService;
+import burp.RequestDecorator;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import org.hibernate.resource.transaction.backend.jta.internal.JtaIsolationDelegate;
 
@@ -45,6 +46,7 @@ public class BurpPropertiesManager extends PropertiesManager {
     public static final String
             TARGET_URL_KEY = "threadfix.target-url",
             SOURCE_FOLDER_KEY = "threadfix.source-folder",
+            OLD_SOURCE_FOLDER_KEY = "threadfix.old-source-folder",
             CONFIG_FILE_KEY = "threadfix.config-file",
             TARGET_PORT_KEY = "threadfix.port",
             TARGET_PATH_KEY = "threadfix.path",
@@ -58,7 +60,7 @@ public class BurpPropertiesManager extends PropertiesManager {
         defaultPropertyValues.put(SOURCE_FOLDER_KEY, "");
     }
 
-    private static HashMap<byte[], IHttpService> requests = new HashMap<byte[], IHttpService>();
+    private static HashMap<RequestDecorator, IHttpService> requests = new HashMap<RequestDecorator, IHttpService>();
     private static IBurpExtenderCallbacks callbacks;
     private static Properties properties = new Properties();
     private static boolean hasChanges = false;
@@ -67,8 +69,8 @@ public class BurpPropertiesManager extends PropertiesManager {
     private static JCheckBox httpsField;
 
     public static boolean
-        AUTO_SCAN_KEY = false,
-        AUTO_SPIDER_KEY = false;
+            AUTO_SCAN_KEY = false,
+            AUTO_SPIDER_KEY = false;
 
     private BurpPropertiesManager(IBurpExtenderCallbacks callbacks) {
         super();
@@ -133,14 +135,14 @@ public class BurpPropertiesManager extends PropertiesManager {
     public String getTargetUrl() {
         //return getPropertyValue(TARGET_URL_KEY);
         if (getUseHttps())
-           return "https://" + getPropertyValue(TARGET_HOST_KEY)  + ":" + getPropertyValue(TARGET_PORT_KEY) + "/" + getPropertyValue(TARGET_PATH_KEY);
-       else
+            return "https://" + getPropertyValue(TARGET_HOST_KEY)  + ":" + getPropertyValue(TARGET_PORT_KEY) + "/" + getPropertyValue(TARGET_PATH_KEY);
+        else
             return "http://" + getPropertyValue(TARGET_HOST_KEY)  + ":" + getPropertyValue(TARGET_PORT_KEY) + "/" + getPropertyValue(TARGET_PATH_KEY);
     }
 
     public void setTargetUrl(String newTargetUrl)
     {
-      setPropertyValue(TARGET_URL_KEY, newTargetUrl);
+        setPropertyValue(TARGET_URL_KEY, newTargetUrl);
     }
 
     public String getSourceFolder() {
@@ -149,6 +151,13 @@ public class BurpPropertiesManager extends PropertiesManager {
 
     public void setSourceFolder(String newSourceFolder) {
         setPropertyValue(SOURCE_FOLDER_KEY, newSourceFolder);
+    }
+
+    public String getOldSourceFolder() {
+        return getPropertyValue(OLD_SOURCE_FOLDER_KEY);
+    }
+
+    public void setOldSourceFolder(String newOldSourceFolder) { setPropertyValue(OLD_SOURCE_FOLDER_KEY, newOldSourceFolder);
     }
 
     public String getConfigFile() {
@@ -169,9 +178,9 @@ public class BurpPropertiesManager extends PropertiesManager {
 
     public boolean isProVersion() {return callbacks.getBurpVersion()[0].toLowerCase().contains("professional");}
 
-    public HashMap<byte[], IHttpService> getRequests() {return requests;}
+    public HashMap<RequestDecorator, IHttpService> getRequests() {return requests;}
 
-    public void setRequests(HashMap<byte [], IHttpService> requests) {this.requests = requests;}
+    public void setRequests(HashMap<RequestDecorator, IHttpService> requests) {this.requests = requests;}
 
     public void setEndpointsTable(JTable table){endpointsTable = table;}
 

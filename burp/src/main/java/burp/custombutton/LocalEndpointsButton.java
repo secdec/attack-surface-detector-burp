@@ -26,6 +26,7 @@
 
 package burp.custombutton;
 
+import burp.EndpointDecorator;
 import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
 import burp.extention.BurpPropertiesManager;
@@ -39,9 +40,7 @@ import java.awt.*;
 
 public class LocalEndpointsButton extends EndpointsButton {
 
-    public LocalEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) {
-        super(view, callbacks);
-    }
+    public LocalEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks); }
 
     @Override
     protected String getButtonText() {
@@ -49,9 +48,7 @@ public class LocalEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected String getNoEndpointsMessage() {
-        return "Failed to retrieve endpoints from the source. Check your source folder location.";
-    }
+    protected String getNoEndpointsMessage() { return "Failed to retrieve endpoints from the source. Check your source folder location."; }
 
     @Override
     protected String getCompletedMessage() { return "The endpoints were successfully generated from source."; }
@@ -62,19 +59,34 @@ public class LocalEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected Endpoint.Info[] getEndpoints(final Component view) {
-
+    protected EndpointDecorator[] getEndpoints(final Component view) {
         EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder());
-
-        Endpoint.Info[] endpoints = null;
-        if (endpointDatabase != null) {
+        EndpointDecorator[] endpoints = null;
+        if (endpointDatabase != null)
+        {
             java.util.List<Endpoint> endpointList = endpointDatabase.generateEndpoints();
             endpointList = EndpointUtil.flattenWithVariants(endpointList);
-            endpoints = new Endpoint.Info[endpointList.size()];
+            endpoints = new EndpointDecorator[endpointList.size()];
             int i = 0;
-            for (Endpoint endpoint : endpointList) {
-                endpoints[i++] = Endpoint.Info.fromEndpoint(endpoint);
-            }
+            for (Endpoint endpoint : endpointList)
+                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
+        }
+        return endpoints;
+    }
+
+    @Override
+    protected EndpointDecorator[] getComparePoints(final Component view)
+    {
+        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder());
+        EndpointDecorator[] endpoints = null;
+        if (endpointDatabase != null)
+        {
+            java.util.List<Endpoint> endpointList = endpointDatabase.generateEndpoints();
+            endpointList = EndpointUtil.flattenWithVariants(endpointList);
+            endpoints = new EndpointDecorator[endpointList.size()];
+            int i = 0;
+            for (Endpoint endpoint : endpointList)
+                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
         }
         return endpoints;
     }

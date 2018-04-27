@@ -245,14 +245,14 @@ class PortFilter extends DocumentFilter {
         sb.insert(offset, string);
         int val = Integer.parseInt(sb.toString());
 
-        if (test(sb.toString()) && sb.length() <= maxLength && val <= 65535) {
+        if (isInteger(sb.toString()) && sb.length() <= maxLength && val <= 65535) {
             super.insertString(fb, offset, string, attr);
         } else {
             Toolkit.getDefaultToolkit().beep();
         }
     }
 
-    private boolean test(String text) {
+    private boolean isInteger(String text) {
         try {
             Integer.parseInt(text);
             return true;
@@ -271,7 +271,7 @@ class PortFilter extends DocumentFilter {
         sb.replace(offset, offset + length, text);
         int val = Integer.parseInt(sb.toString());
 
-        if (test(sb.toString()) && (sb.length() <= maxLength) && val <= 65535) {
+        if (isInteger(sb.toString()) && (sb.length() <= maxLength) && val <= 65535) {
             super.replace(fb, offset, length, text, attrs);
         } else {
             Toolkit.getDefaultToolkit().beep();
@@ -287,7 +287,7 @@ class PortFilter extends DocumentFilter {
         sb.append(doc.getText(0, doc.getLength()));
         sb.delete(offset, offset + length);
 
-        if ((test(sb.toString()) && (sb.length() <= maxLength)) || (sb.length() == 0)) {
+        if ((isInteger(sb.toString()) && (sb.length() <= maxLength)) || (sb.length() == 0)) {
             super.remove(fb, offset, length);
         } else {
             Toolkit.getDefaultToolkit().beep();

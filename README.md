@@ -15,6 +15,12 @@ The Attack Surface Detector uses static code analyses to identify web app endpoi
 
 To see a brief demonstration for the Attack Surface Detector, you can check it out here:[YouTube Link](https://youtu.be/jUUJNRcmqwI)
 
+# Building the Plugin
+
+1.  Install *Maven*:  https://maven.apache.org/install.html
+2. Clone *Attack Surface Detector* repository:  https://github.com/secdec/attack-surface-detector-burp
+3. Navigate to the source code *Directory*, open terminal and run the command `mvn clean package`
+4. The plugin will be located in the target folder named *attacksurfacedetector-release-1-jar-with-dependencies*.
 
 # Installation
 
@@ -33,12 +39,6 @@ To see a brief demonstration for the Attack Surface Detector, you can check it o
 * Plugin will run source code analysis and send seeded endpoints to *Target* and *Spider*; Scanner will not run
 2.	Launch application
 
-### Building the Plugin
-
-1.  Install *Maven*:  https://maven.apache.org/install.html
-2. Clone *Attack Surface Detector* repository:  https://github.com/secdec/attack-surface-detector-burp
-3. Navigate to the source code *Directory*, open terminal and run the command `mvn clean package`
-4. The plugin will be located in the target folder named *attacksurfacedetector-release-1-jar-with-dependencies*.
 ### Installing the Plugin
 1.	Go to *Extender* tab > *Extensions* subtab > Add in *Burp Extensions* section
 #### Extension Details

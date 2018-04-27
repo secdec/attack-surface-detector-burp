@@ -31,16 +31,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ConfigurationDialogs {
-
-    public static enum DialogMode {
-         SOURCE;
-    }
-
+public class ConfigurationDialogs
+{
+    public static enum DialogMode {SOURCE;}
 	public ConfigurationDialogs() {}
 	
-	public static boolean show(Component view, DialogMode mode) {
-        //boolean shouldContinue = false;
+	public static boolean show(Component view, DialogMode mode)
+    {
             boolean shouldContinue = (!BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder().trim().isEmpty());
             if(!shouldContinue)
             {
@@ -51,35 +48,30 @@ public class ConfigurationDialogs {
                 JTextField sourceFolderField = new JTextField();
                 IBurpExtenderCallbacks callbacks =  BurpPropertiesManager.getBurpPropertiesManager().getCallbacks();
                 callbacks.customizeUiComponent(sourceFolderField);
-                sourceFolderBrowseButton.addActionListener(new ActionListener() {
+                sourceFolderBrowseButton.addActionListener(new ActionListener()
+                {
                     @Override
-                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                    public void actionPerformed(java.awt.event.ActionEvent e)
+                    {
                         JFileChooser chooser = new JFileChooser();
                         String currentDirectory = sourceFolderField.getText();
-                        if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                        if ((currentDirectory == null) || (currentDirectory.trim().equals("")))
                             currentDirectory = System.getProperty("user.home");
-                        }
+
                         chooser.setCurrentDirectory(new java.io.File(currentDirectory));
                         chooser.setDialogTitle("Please select the folder or zip file containing the source code");
                         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                         chooser.setAcceptAllFileFilterUsed(false);
-                        if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
+                        if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION)
+                        {
                             sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
                             BurpPropertiesManager.getBurpPropertiesManager().setSourceFolder(sourceFolderField.getText());
                         }
                     }
                 });
-
                 GridBagConstraints labelConstraints = new GridBagConstraints();
-                //labelConstraints.gridwidth = 1;
-                //labelConstraints.gridx = 0;
-                //labelConstraints.gridy = 0;
-                //labelConstraints.fill = GridBagConstraints.HORIZONTAL;
-
                 GridBagLayout experimentLayout = new GridBagLayout();
-
                 sourcePanel.setLayout(experimentLayout);
-                //sourcePanel.add(sourcePanelDescription,labelConstraints);
 
                 labelConstraints = new GridBagConstraints();
                 labelConstraints.gridwidth = 1;
@@ -107,7 +99,8 @@ public class ConfigurationDialogs {
                         "Please enter the source code location",
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
+                if (result == JOptionPane.OK_OPTION)
+                {
                     String sourcePath = sourceFolderField.getText();
                     if(sourcePath != null && !sourcePath.trim().isEmpty())
                     {
@@ -115,19 +108,13 @@ public class ConfigurationDialogs {
                         return true;
                     }
                     else
-                    {
                         return false;
-                    }
                 }
                 else
-                    {
                     return false;
-                }
-
             }
 
             return shouldContinue;
         }
 	}
-
 
