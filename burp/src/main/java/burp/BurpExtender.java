@@ -333,7 +333,6 @@ public class BurpExtender implements IBurpExtender, ITab
                         }
                         if (!found)
                             displayStr = displayStr + "<strong>" + parameter.getKey() + "</strong> - <strong>" + parameter.getValue().getDataType().getDisplayName().toUpperCase() + "</strong> (added parameter)<br>";
-
                     }
                     for (Map.Entry<String, RouteParameter> compParameter : decorator.getComparePoint().getParameters().entrySet())
                     {   boolean found = false;
@@ -347,10 +346,7 @@ public class BurpExtender implements IBurpExtender, ITab
                         }
                         if(!found)
                             displayStr = displayStr + "<span style='text-decoration: line-through;'>" +compParameter.getKey() + " - " + compParameter.getValue().getDataType().getDisplayName().toUpperCase() + "</span> (removed parameter)<br>";
-
-
                     }
-
                 }
                 else
                 {
@@ -471,7 +467,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 }
             }
         });
-        sourceFolderField = addTextFieldToGridBagLayout("Source code:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
+        sourceFolderField = addTextFieldToGridBagLayout("Source code  to analyze:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
 
         final JButton oldSourceFolderBrowseButton = new JButton("Select folder or zip file ...");
         oldSourceFolderBrowseButton.addActionListener(new ActionListener() {
@@ -494,7 +490,7 @@ public class BurpExtender implements IBurpExtender, ITab
         });
 
 
-        oldSourceFolderField = addTextFieldToGridBagLayout("<html>Optional<br/>Source code to compare to:</html>", sourcePanel, yPosition++, BurpPropertiesManager.OLD_SOURCE_FOLDER_KEY, oldSourceFolderBrowseButton);
+        oldSourceFolderField = addTextFieldToGridBagLayout("Comparison source code (optional):", sourcePanel, yPosition++, BurpPropertiesManager.OLD_SOURCE_FOLDER_KEY, oldSourceFolderBrowseButton);
 
         return sourcePanel;
     }
@@ -526,7 +522,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 }
             }
         });
-        configFileField = addTextFieldToGridBagLayout("Location of configuration file :", configPanel, yPosition++, BurpPropertiesManager.CONFIG_FILE_KEY, configFileBrowseButton);
+        configFileField = addTextFieldToGridBagLayout("Location of configuration file:", configPanel, yPosition++, BurpPropertiesManager.CONFIG_FILE_KEY, configFileBrowseButton);
 
         return configPanel;
     }
