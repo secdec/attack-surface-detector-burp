@@ -467,7 +467,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 }
             }
         });
-        sourceFolderField = addTextFieldToGridBagLayout("Source code  to analyze:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
+        sourceFolderField = addTextFieldToGridBagLayout("Source code to analyze:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
 
         final JButton oldSourceFolderBrowseButton = new JButton("Select folder or zip file ...");
         oldSourceFolderBrowseButton.addActionListener(new ActionListener() {
