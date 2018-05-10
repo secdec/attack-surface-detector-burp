@@ -34,10 +34,13 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -461,6 +464,19 @@ public class BurpExtender implements IBurpExtender, ITab
                 chooser.setDialogTitle("Please select the folder containing the source code");
                 chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.setAcceptAllFileFilterUsed(false);
+                chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                chooser.addChoosableFileFilter( new FileFilter()
+                {
+                    public boolean accept(File f)
+                    {
+                        return f.isDirectory();
+                    }
+
+                    public String getDescription()
+                    {
+                        return "dir | Directory/Folder";
+                    }
+                });
                 if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
                     sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
                     BurpPropertiesManager.getBurpPropertiesManager().setSourceFolder(sourceFolderField.getText());
@@ -482,6 +498,19 @@ public class BurpExtender implements IBurpExtender, ITab
                 chooser2.setDialogTitle("Please select the folder containing the source code");
                 chooser2.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser2.setAcceptAllFileFilterUsed(false);
+                chooser2.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                chooser2.addChoosableFileFilter( new FileFilter()
+                {
+                    public boolean accept(File f)
+                    {
+                        return f.isDirectory();
+                    }
+
+                    public String getDescription()
+                    {
+                        return "dir | Directory/Folder";
+                    }
+                });
                 if (chooser2.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
                     oldSourceFolderField.setText(chooser2.getSelectedFile().getAbsolutePath());
                     BurpPropertiesManager.getBurpPropertiesManager().setOldSourceFolder(oldSourceFolderField.getText());
