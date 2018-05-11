@@ -490,7 +490,7 @@ public class BurpExtender implements IBurpExtender, ITab
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 JFileChooser chooser2 = new JFileChooser();
-                String currentDirectory = sourceFolderField.getText();
+                String currentDirectory = oldSourceFolderField.getText();
                 if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
                     currentDirectory = System.getProperty("user.home");
                 }
