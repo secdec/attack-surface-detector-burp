@@ -65,6 +65,7 @@ public class ConfigurationDialogs
                         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                         chooser.setAcceptAllFileFilterUsed(false);
                         chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                        chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.war | Web application archive", "war"));
                         chooser.addChoosableFileFilter( new FileFilter()
                         {
                             public boolean accept(File f)
@@ -103,6 +104,7 @@ public class ConfigurationDialogs
                         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                         chooser.setAcceptAllFileFilterUsed(false);
                         chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                        chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.war | Web application archive", "war"));
                         chooser.addChoosableFileFilter( new FileFilter()
                         {
                             public boolean accept(File f)

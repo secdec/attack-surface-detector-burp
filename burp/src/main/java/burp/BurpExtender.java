@@ -465,6 +465,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.setAcceptAllFileFilterUsed(false);
                 chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.war | Web application archive", "war"));
                 chooser.addChoosableFileFilter( new FileFilter()
                 {
                     public boolean accept(File f)
@@ -499,6 +500,7 @@ public class BurpExtender implements IBurpExtender, ITab
                 chooser2.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser2.setAcceptAllFileFilterUsed(false);
                 chooser2.addChoosableFileFilter( new FileNameExtensionFilter("*.zip | ZIP archive", "zip"));
+                chooser2.addChoosableFileFilter( new FileNameExtensionFilter("*.war | Web application archive", "war"));
                 chooser2.addChoosableFileFilter( new FileFilter()
                 {
                     public boolean accept(File f)
