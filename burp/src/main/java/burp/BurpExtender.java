@@ -574,7 +574,7 @@ public class BurpExtender implements IBurpExtender, ITab
         targetHostField = addTextFieldToGridBagLayout("Host:", targetPanel, yPosition++, BurpPropertiesManager.TARGET_HOST_KEY);
         targetPortField = addTextFieldToGridBagLayout("Port:", targetPanel, yPosition++, BurpPropertiesManager.TARGET_PORT_KEY);
         targetPathField = addTextFieldToGridBagLayout("Path (optional):", targetPanel, yPosition++, BurpPropertiesManager.TARGET_PATH_KEY);
-        useHttpField = addCheckBoxToGridBagLayout("Use Https", targetPanel, yPosition++, applicationCheckBoxHttpActionListener);
+        useHttpField = addCheckBoxToGridBagLayout("Use HTTPS", targetPanel, yPosition++, applicationCheckBoxHttpActionListener);
         useHttpField.setSelected(BurpPropertiesManager.getBurpPropertiesManager().getUseHttps());
         BurpPropertiesManager.getBurpPropertiesManager().setUseHttpsField(useHttpField);
         PlainDocument portDoc = (PlainDocument)targetPortField.getDocument();
