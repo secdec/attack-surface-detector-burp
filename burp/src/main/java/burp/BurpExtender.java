@@ -614,7 +614,7 @@ public class BurpExtender implements IBurpExtender, ITab
             }
         };
         autoScanText = new JLabel("Automatically start active scanner after automatic spider: ");
-        autoSpiderField = addCheckBoxToGridBagLayout("Automatically start spider after importing endpoints: ", autoOptionsPanel, yPosition++, applicationCheckBoxSpiderActionListener);
+        autoSpiderField = addCheckBoxToGridBagLayout(new JLabel("Automatically start spider after importing endpoints: "), autoOptionsPanel, yPosition++, applicationCheckBoxSpiderActionListener);
         if(BurpPropertiesManager.getBurpPropertiesManager().isProVersion())
         {
             autoScanField = addCheckBoxToGridBagLayout(autoScanText, autoOptionsPanel, yPosition++, applicationCheckBoxScanActionListener);
@@ -909,31 +909,33 @@ public class BurpExtender implements IBurpExtender, ITab
     private JCheckBox addCheckBoxToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, ActionListener actionListener, JButton button) {
         JLabel textFieldLabel = new JLabel(labelText);
         callbacks.customizeUiComponent(textFieldLabel);
+        JCheckBox checkBox = new JCheckBox();
+        callbacks.customizeUiComponent(checkBox);
 
         textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = yPosition;
-        gridBagConstraints.ipadx = 5;
-        gridBagConstraints.ipady = 5;
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        //gridBagConstraints.ipadx = 5;
+        //gridBagConstraints.ipady = 5;
+        //gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(0,22,0,0);
         gridBagContainer.add(textFieldLabel, gridBagConstraints);
 
-        JCheckBox checkBox = new JCheckBox();
-        callbacks.customizeUiComponent(checkBox);
         gridBagConstraints = new GridBagConstraints();
         if (button == null) {
             gridBagConstraints.gridwidth = 2;
         } else {
             gridBagConstraints.gridwidth = 1;
         }
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = yPosition;
-        gridBagConstraints.ipadx = 5;
-        gridBagConstraints.ipady = 5;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        //gridBagConstraints.ipadx = 5;
+        //gridBagConstraints.ipady = 5;
+        //gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagContainer.add(checkBox, gridBagConstraints);
 
         if (button != null) {
@@ -956,6 +958,8 @@ public class BurpExtender implements IBurpExtender, ITab
 
     private JCheckBox addCheckBoxToGridBagLayout(JLabel textFieldLabel, Container gridBagContainer, int yPosition, ActionListener actionListener, JButton button) {
         callbacks.customizeUiComponent(textFieldLabel);
+        JCheckBox checkBox = new JCheckBox();
+        callbacks.customizeUiComponent(checkBox);
 
         textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -964,11 +968,10 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraints.gridy = yPosition;
         gridBagConstraints.ipadx = 5;
         gridBagConstraints.ipady = 5;
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagContainer.add(textFieldLabel, gridBagConstraints);
+        //gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagContainer.add(checkBox, gridBagConstraints);
 
-        JCheckBox checkBox = new JCheckBox();
-        callbacks.customizeUiComponent(checkBox);
+
         gridBagConstraints = new GridBagConstraints();
         if (button == null) {
             gridBagConstraints.gridwidth = 2;
@@ -979,9 +982,9 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraints.gridy = yPosition;
         gridBagConstraints.ipadx = 5;
         gridBagConstraints.ipady = 5;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = GridBagConstraints.NORTH;
-        gridBagContainer.add(checkBox, gridBagConstraints);
+        //gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagContainer.add(textFieldLabel, gridBagConstraints);
 
         if (button != null) {
             callbacks.customizeUiComponent(button);
