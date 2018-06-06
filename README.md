@@ -13,7 +13,7 @@ The Attack Surface Detector uses static code analyses to identify web app endpoi
   * Python / Django
   * Ruby / Rails
 
-To see a brief demonstration for the Attack Surface Detector, you can check it out here:[YouTube Link](https://youtu.be/jUUJNRcmqwI)
+To see a brief demonstration for the Attack Surface Detector, you can check it out [here:](https://youtu.be/jUUJNRcmqwI)
 
 # Building the Plugin
 
@@ -30,22 +30,27 @@ To see a brief demonstration for the Attack Surface Detector, you can check it o
 
 ## How to Install
 
-1.	Download and install the latest build of PortSwigger BurpSuite from http://portswigger.net/burp/ 
-### Professional
-* Scanner functionality available.
-* The plugin will run source code analysis and seed endpoints into the target sitemap, and optionally run the spider and active scanning functionality.
-### Free
-* Scanner unavailable
-* Plugin will run source code analysis and send seeded endpoints to *Target* and *Spider*; Scanner will not run
-2.	Launch application
+[Detailed Build/install instructions](https://github.com/secdec/attack-surface-detector-zap/wiki).
 
-### Installing the Plugin
-1.	Go to *Extender* tab > *Extensions* subtab > Add in *Burp Extensions* section
-#### Extension Details
+1.	Download and install the latest build of PortSwigger BurpSuite from http://portswigger.net/burp/ 
+2.  Downlaod  the latest Attack Surface Detector jar file from [https://github.com/secdec/attack-surface-detector-burp/releases](https://github.com/secdec/attack-surface-detector-burp/releases)
+3.	Launch Burp
+4.  Navigate to the *Extender* tab -> add
+5.  Locate the Attack Surface Detector jar file
+6.  Click Next
+
+## Extension Details
 * Extension Type: Java
 * Extension File: attacksurfacedetector-release-1-jar-with-dependencies
 * All other fields can be left alone
-2.	Click *Next* and *Close*
+
+### Burp Suite Professional
+* Scanner functionality available.
+* The plugin will run source code analysis and seed endpoints into the target sitemap, and optionally run the spider and active scanning functionality.
+### Burp Suire Free
+* Scanner unavailable
+* Plugin will run source code analysis and send seeded endpoints to *Target* and *Spider*; Scanner will not run
+
 
 
 
