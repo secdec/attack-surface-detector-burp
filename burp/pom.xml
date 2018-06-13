@@ -22,7 +22,6 @@
     <prerequisites>
         <maven>2</maven>
     </prerequisites>
-
     <dependencies>
         <dependency>
             <groupId>net.portswigger.burp.extender</groupId>
@@ -30,19 +29,24 @@
             <version>1.7.22</version>
         </dependency>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-cli-lib</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-entities</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-ham</artifactId>
-            <version>1.2.12</version>
+            <version>1.2.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.owasp</groupId>

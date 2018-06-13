@@ -15,34 +15,9 @@ The Attack Surface Detector uses static code analyses to identify web app endpoi
 
 To see a brief demonstration for the Attack Surface Detector, you can check it out [here:](https://youtu.be/jUUJNRcmqwI)
 
-# Building the Plugin
-
-1.  Install *Maven*:  https://maven.apache.org/install.html
-2. Clone *Attack Surface Detector* repository:  https://github.com/secdec/attack-surface-detector-burp
-3. Navigate to the source code *Directory*, open terminal and run the command `mvn clean package`
-4. The plugin will be located in the target folder named *attacksurfacedetector-release-1-jar-with-dependencies*.
-
-# Installation
-
-## Requirements
-* This plugin
-* PortSwigger Burp Suite
-
-## How to Install
-
-[Detailed Build/install instructions](https://github.com/secdec/attack-surface-detector-zap/wiki).
-
-1.	Download and install the latest build of PortSwigger BurpSuite from http://portswigger.net/burp/ 
-2.  Downlaod  the latest Attack Surface Detector jar file from [https://github.com/secdec/attack-surface-detector-burp/releases](https://github.com/secdec/attack-surface-detector-burp/releases)
-3.	Launch Burp
-4.  Navigate to the *Extender* tab -> add
-5.  Locate the Attack Surface Detector jar file
-6.  Click Next
-
 ## Extension Details
 * Extension Type: Java
-* Extension File: attacksurfacedetector-release-1-jar-with-dependencies
-* All other fields can be left alone
+* Extension File: attacksurfacedetector-release-#-jar-with-dependencies
 
 ### Burp Suite Professional
 * Scanner functionality available.
@@ -50,6 +25,25 @@ To see a brief demonstration for the Attack Surface Detector, you can check it o
 ### Burp Suire Free
 * Scanner unavailable
 * Plugin will run source code analysis and send seeded endpoints to *Target* and *Spider*; Scanner will not run
+
+
+
+## Installation
+[Detailed install instructions](https://github.com/secdec/attack-surface-detector-burp/wiki/Installation).
+
+# For Developers & Contributors
+
+## Build Instructions
+1. Install Maven. - [https://maven.apache.org/install.html](https://maven.apache.org/install.html)
+2. Clone Attack Surface Detector repository - https://github.com/secdec/attack-surface-detector-burp 
+3. Navigate to the Source Code Directory
+4. Open a new terminal and run the command `mvn clean package`
+4. The plugin will be located in the target folder named attacksurfacedetector-release-#-jar-with-dependencies.jar
+
+## License
+
+Licensed under the [MPL](https://github.com/secdec/attack-surface-detector-burp/blob/master/LICENSE) License.
+
 
 
 
