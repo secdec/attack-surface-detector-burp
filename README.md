@@ -1,3 +1,5 @@
+![asd-logo](https://user-images.githubusercontent.com/35819157/41377103-1105060c-6f29-11e8-810c-0ec520330a58.png)
+
 # Summary
 During web application penetration testing, it is important to enumerate  your application's attack surface. While Dynamic Application Security Testing (DAST) tools (such as Burp Suite and ZAP) are good at spidering to identify application attack surfaces, they will often fail to identify unlinked endpoints and optional parameters. These endpoints and parameters not found often go untested, which can leave your application open to an attacker.
 This tool is the Attack Surface Detector, a plugin for Burp Suite. This tool figures out the endpoints of a web application, the parameters these endpoints accept, and the data type of those parameters. This includes the unlinked endpoints a spider won't find in client-side code, or optional parameters totally unused in client-side code. The plugin then imports this data into Burp Suite so you view the results, or work with the detected endpoints and parameters from the target site map.
