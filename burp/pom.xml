@@ -36,17 +36,17 @@
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-cli-lib</artifactId>
-            <version>1.2.13-SNAPSHOT</version>
+            <version>1.2.12</version>
         </dependency>
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-entities</artifactId>
-            <version>1.2.13-SNAPSHOT</version>
+            <version>1.2.12</version>
         </dependency>
         <dependency>
             <groupId>com.github.secdec.astam-correlator</groupId>
             <artifactId>threadfix-ham</artifactId>
-            <version>1.2.13-SNAPSHOT</version>
+            <version>1.2.13</version>
         </dependency>
         <dependency>
             <groupId>org.owasp</groupId>
@@ -83,7 +83,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>attacksurfacedetector-release-1.10</finalName>
+                    <finalName>attacksurfacedetector-release-1.11</finalName>
                 </configuration>
                 <executions>
                     <execution>
