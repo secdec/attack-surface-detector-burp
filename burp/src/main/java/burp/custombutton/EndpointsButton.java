@@ -71,71 +71,77 @@ public abstract class EndpointsButton extends JButton
                 {
                     if (BurpPropertiesManager.getBurpPropertiesManager().getConfigFile() != null )
                         callbacks.loadConfigFromJson(getBurpConfigAsString());
-
-                    EndpointDecorator[] endpoints = getEndpoints(view);
-                    EndpointDecorator[] comparePoints = null;
-                    if(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder().trim().isEmpty())
-                        comparePoints = getComparePoints(view);
-                    if (endpoints.length == 0)
-                        JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-                    else
+                    try
                     {
-                        if (comparePoints != null && comparePoints.length != 0)
-                            endpoints = compareEndpoints(endpoints, comparePoints, view);
-
-                        fillEndpointsToTable(endpoints);
-                        for (EndpointDecorator decorator : endpoints)
-                        {
-                            if (decorator != null)
-                            {
-                                Endpoint.Info endpoint = decorator.getEndpoint();
-                                String endpointPath = endpoint.getUrlPath();
-                                if (endpointPath.startsWith("/"))
-                                    endpointPath = endpointPath.substring(1);
-
-                                endpointPath = endpointPath.replaceAll(GENERIC_INT_SEGMENT, "1");
-                                nodes.add(endpointPath);
-                                for(Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
-                                    nodes.add(endpointPath + "?" + parameter.getKey() + "=" + parameter.getValue());
-                            }
-                        }
-                        String url = UrlDialog.show(view);
-                        if (url != null)
-                        {
-                            try
-                            {
-                                if (!url.substring(url.length() - 1).equals("/"))
-                                    url = url+"/";
-
-                                for (String node: nodes)
-                                {
-                                    URL nodeUrl = new URL(url + node);
-                                    callbacks.includeInScope(nodeUrl);
-                                    if(BurpPropertiesManager.getBurpPropertiesManager().getAutoSpider())
-                                        callbacks.sendToSpider(nodeUrl);
-                                }
-                                buildRequests(view, callbacks, endpoints, url);
-                                completed = true;
-                            }
-                            catch (MalformedURLException e1)
-                            {
-                                JOptionPane.showMessageDialog(view, "Invalid URL.",
-                                        "Warning", JOptionPane.WARNING_MESSAGE);
-                            }
-
-                            if (completed)
-                                JOptionPane.showMessageDialog(view, getCompletedMessage());
-                        }
+                        EndpointDecorator[] endpoints = getEndpoints(view);
+                        EndpointDecorator[] comparePoints = null;
+                        if(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder().trim().isEmpty())
+                            comparePoints = getComparePoints(view);
+                        if (endpoints.length == 0)
+                            JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                         else
-                            makeReqs = false;
-                    }
+                        {
+                            if (comparePoints != null && comparePoints.length != 0)
+                                endpoints = compareEndpoints(endpoints, comparePoints, view);
 
-                    if(makeReqs)
+                            fillEndpointsToTable(endpoints);
+                            for (EndpointDecorator decorator : endpoints)
+                            {
+                                if (decorator != null)
+                                {
+                                    Endpoint.Info endpoint = decorator.getEndpoint();
+                                    String endpointPath = endpoint.getUrlPath();
+                                    if (endpointPath.startsWith("/"))
+                                        endpointPath = endpointPath.substring(1);
+
+                                    endpointPath = endpointPath.replaceAll(GENERIC_INT_SEGMENT, "1");
+                                    nodes.add(endpointPath);
+                                    for(Map.Entry<String, RouteParameter> parameter : endpoint.getParameters().entrySet())
+                                        nodes.add(endpointPath + "?" + parameter.getKey() + "=" + parameter.getValue());
+                                }
+                            }
+                            String url = UrlDialog.show(view);
+                            if (url != null)
+                            {
+                                try
+                                {
+                                    if (!url.substring(url.length() - 1).equals("/"))
+                                        url = url+"/";
+
+                                    for (String node: nodes)
+                                    {
+                                        URL nodeUrl = new URL(url + node);
+                                        callbacks.includeInScope(nodeUrl);
+                                        if(BurpPropertiesManager.getBurpPropertiesManager().getAutoSpider())
+                                            callbacks.sendToSpider(nodeUrl);
+                                    }
+                                    buildRequests(view, callbacks, endpoints, url);
+                                    completed = true;
+                                }
+                                catch (MalformedURLException e1)
+                                {
+                                    JOptionPane.showMessageDialog(view, "Invalid URL.",
+                                            "Warning", JOptionPane.WARNING_MESSAGE);
+                                }
+
+                                if (completed)
+                                    JOptionPane.showMessageDialog(view, getCompletedMessage());
+                            }
+                            else
+                                makeReqs = false;
+                        }
+
+                        if(makeReqs)
+                        {
+                            if (BurpPropertiesManager.getBurpPropertiesManager().getAutoScan())
+                                sendToScanner(callbacks, UrlDialog.show(view));
+                            RequestMakerThread rmt = new RequestMakerThread(callbacks, view);
+                            new Thread(rmt).start();
+                        }
+                    }
+                    catch(Exception ex)
                     {
-                        if (BurpPropertiesManager.getBurpPropertiesManager().getAutoScan())
-                            sendToScanner(callbacks, UrlDialog.show(view));
-                        RequestMakerThread rmt = new RequestMakerThread(callbacks, view);
-                        new Thread(rmt).start();
+                        JOptionPane.showMessageDialog(view, "An error occurred processing input. Please check input");
                     }
                 }
                 else
