@@ -27,6 +27,7 @@
 package burp;
 
 import burp.custombutton.LocalEndpointsButton;
+import burp.custombutton.SerializedEndpointsButton;
 import burp.extention.BurpPropertiesManager;
 import com.denimgroup.threadfix.data.entities.RouteParameter;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
@@ -41,6 +42,9 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
@@ -57,6 +61,8 @@ public class BurpExtender implements IBurpExtender, ITab
     private JTabbedPane tabbedPane;
     private JTextField sourceFolderField;
     private JTextField oldSourceFolderField;
+    private JTextField serializationField;
+    private JTextField oldSerializationField;
     private JTextField configFileField;
     private JTextField targetHostField;
     private JTextField targetPathField;
@@ -206,6 +212,26 @@ public class BurpExtender implements IBurpExtender, ITab
         sourcePanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
         sourcePanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
         optionsPanel.add(sourcePanelSeparator, sourcePanelSeparatorConstraints);
+
+        JPanel serializationPanel = buildSerializationPanel();
+        GridBagConstraints serializationConstraints = new GridBagConstraints();
+        serializationConstraints.gridx = 0;
+        serializationConstraints.gridy = yPosition++;
+        serializationConstraints.ipadx = 5;
+        serializationConstraints.ipady = 5;
+        serializationConstraints.insets = optionsPanelInsets;
+        serializationConstraints.anchor = GridBagConstraints.NORTHWEST;
+        optionsPanel.add(serializationPanel, serializationConstraints);
+
+        JSeparator serializationPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        callbacks.customizeUiComponent(serializationPanelSeparator);
+        GridBagConstraints serializationPanelSeparatorConstraints = new GridBagConstraints();
+        serializationPanelSeparatorConstraints.gridx = 0;
+        serializationPanelSeparatorConstraints.gridy = yPosition++;
+        serializationPanelSeparatorConstraints.insets = optionsPanelInsets;
+        serializationPanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        serializationPanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        optionsPanel.add(serializationPanelSeparator, serializationPanelSeparatorConstraints);
 
         JPanel configPanel = buildConfigPanel();
         GridBagConstraints configPanelConstraints = new GridBagConstraints();
@@ -431,6 +457,23 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraintsLocal.anchor = GridBagConstraints.NORTHWEST;
 
         importExportPanel.add(localEndpointsButton, gridBagConstraintsLocal);
+
+        JButton serializedEndpointsButton = new SerializedEndpointsButton(getUiComponent(), callbacks);
+        callbacks.customizeUiComponent(localEndpointsButton);
+
+        serializedEndpointsButton.setSize(300, 30);
+        serializedEndpointsButton.setLocation(10,400);
+
+        gridBagConstraintsLocal = new GridBagConstraints();
+        gridBagConstraintsLocal.gridwidth = 1;
+        gridBagConstraintsLocal.gridx = 2;
+        gridBagConstraintsLocal.gridy = yPosition++;
+        gridBagConstraintsLocal.ipadx = 5;
+        gridBagConstraintsLocal.ipady = 5;
+        gridBagConstraintsLocal.anchor = GridBagConstraints.NORTHWEST;
+
+        importExportPanel.add(serializedEndpointsButton, gridBagConstraintsLocal);
+
         return importExportPanel;
     }
 
@@ -441,16 +484,39 @@ public class BurpExtender implements IBurpExtender, ITab
         int yPosition = 0;
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
-        JPanel newSourceDialog = new JPanel();
-        newSourceDialog.setLayout(new GridBagLayout());
-        JPanel oldSourceDialog = new JPanel();
-        oldSourceDialog.setLayout(new GridBagLayout());
 
         final JLabel sourcePanelTitle = addPanelTitleToGridBagLayout("Local Source Code", sourcePanel, yPosition++);
-        final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("This setting lets you configure the location of your source code.", sourcePanel, yPosition++);
+        final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("<html>This setting lets you configure the location of your source code.<br>For more information on supported frameworks and general usage click the link below:", sourcePanel, yPosition++);
+        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-zap/wiki\" target=\"https://github.com/secdec/attack-surface-detector-zap/wiki\">https://github.com/secdec/attack-surface-detector-zap/wiki</a></html>";
+        final JLabel linkLabel = addPanelDescriptionToGridBagLayout(link, sourcePanel, yPosition++);
         final JLabel differenceGeneratorDescription = addPanelDescriptionToGridBagLayout("<html><br>You can optionally choose to compare two different versions of the source code, and the Attack Surface Detector <br>will highlight endpoints and parameters that are new or modified in the newer version of the source code.</html>", sourcePanel, yPosition++);
         final JLabel sourcePanelDescription2 = addPanelDescriptionToGridBagLayout(" ", sourcePanel, yPosition++);
+        linkLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        linkLabel.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() > 0) {
+
+                    if (Desktop.isDesktopSupported()) {
+
+                        Desktop desktop = Desktop.getDesktop();
+
+                        try {
+
+                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-zap/wiki");
+
+                            desktop.browse(uri);
+
+                        } catch (IOException ex) { }
+                        catch (URISyntaxException ex) { }
+                    } else { }
+                }
+
+            }
+
+        });
         final JButton sourceFolderBrowseButton = new JButton("Select folder or zip file ...");
         sourceFolderBrowseButton.addActionListener(new ActionListener() {
             @Override
@@ -524,6 +590,94 @@ public class BurpExtender implements IBurpExtender, ITab
         oldSourceFolderField = addTextFieldToGridBagLayout("Comparison source code (optional):", sourcePanel, yPosition++, BurpPropertiesManager.OLD_SOURCE_FOLDER_KEY, oldSourceFolderBrowseButton);
 
         return sourcePanel;
+    }
+
+    private JPanel buildSerializationPanel() {
+        final JPanel serializationPanel = new JPanel();
+        serializationPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-cli\" target=\"https://github.com/secdec/attack-surface-detector-cli\">https://github.com/secdec/attack-surface-detector-cli</a></html>";
+
+        final JLabel serializationPanelTitle = addPanelTitleToGridBagLayout("Attack Surface Detector CLI JSON", serializationPanel, yPosition++);
+        final JLabel serializationPanelDescription = addPanelDescriptionToGridBagLayout("<html>The CLI tool is a command line interface version of Attack Surface Detector that can produce a serialized JSON output of a supported web applications endpoints. <br>To find this tool or help using it please visit the link below:</html>", serializationPanel, yPosition++);
+        final JLabel linkLabel = addPanelDescriptionToGridBagLayout(link, serializationPanel, yPosition++);
+        final JLabel differenceGeneratorDescription = addPanelDescriptionToGridBagLayout("<html><br>You can optionally choose to compare two different versions of the endpoint JSON files, and the Attack Surface Detector <br>will highlight endpoints and parameters that are new or modified in the newer version of the application.</html>", serializationPanel, yPosition++);
+        final JLabel serializationPanelDescription2 = addPanelDescriptionToGridBagLayout(" ", serializationPanel, yPosition++);
+        linkLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        linkLabel.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() > 0) {
+
+                    if (Desktop.isDesktopSupported()) {
+
+                        Desktop desktop = Desktop.getDesktop();
+
+                        try {
+
+                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-cli");
+
+                            desktop.browse(uri);
+
+                        } catch (IOException ex) { }
+                        catch (URISyntaxException ex) { }
+                    } else { }
+                }
+
+            }
+
+        });
+        final JButton sourceFolderBrowseButton = new JButton("Select JSON file ...");
+        sourceFolderBrowseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                String currentDirectory = serializationField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser.setDialogTitle("Please select endpoint JSON file");
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.json | JSON File", "json"));
+                if (chooser.showOpenDialog(serializationPanel) == JFileChooser.APPROVE_OPTION) {
+                    serializationField.setText(chooser.getSelectedFile().getAbsolutePath());
+                    BurpPropertiesManager.getBurpPropertiesManager().setSerializationFile(serializationField.getText());
+                }
+            }
+        });
+        serializationField = addTextFieldToGridBagLayout("Endpoint JSON to analyze:", serializationPanel, yPosition++, BurpPropertiesManager.SERIALIZATION_KEY, sourceFolderBrowseButton);
+
+        final JButton oldSourceFolderBrowseButton = new JButton("Select JSON file ...");
+        oldSourceFolderBrowseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser2 = new JFileChooser();
+                String currentDirectory = oldSerializationField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser2.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser2.setDialogTitle("Please select endpoint JSON file");
+                chooser2.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                chooser2.setAcceptAllFileFilterUsed(false);
+                chooser2.addChoosableFileFilter( new FileNameExtensionFilter("*.json | JSON File", "json"));
+                if (chooser2.showOpenDialog(serializationPanel) == JFileChooser.APPROVE_OPTION) {
+                    oldSerializationField.setText(chooser2.getSelectedFile().getAbsolutePath());
+                    BurpPropertiesManager.getBurpPropertiesManager().setOldSerializationFile(oldSerializationField.getText());
+                }
+            }
+        });
+
+
+        oldSerializationField = addTextFieldToGridBagLayout("Comparison endpoint JSON (optional):", serializationPanel, yPosition++, BurpPropertiesManager.OLD_SERIALIZATION_KEY, oldSourceFolderBrowseButton);
+
+        return serializationPanel;
     }
 
     private JPanel buildConfigPanel() {
@@ -709,6 +863,8 @@ public class BurpExtender implements IBurpExtender, ITab
         BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
         sourceFolderField.setText(burpPropertiesManager.getSourceFolder());
         oldSourceFolderField.setText(burpPropertiesManager.getOldSourceFolder());
+        serializationField.setText(burpPropertiesManager.getSerializationFile());
+        oldSerializationField.setText(burpPropertiesManager.getOldSerializationFile());
         configFileField.setText(burpPropertiesManager.getConfigFile());
         targetHostField.setText(burpPropertiesManager.getTargetHost());
         targetPathField.setText(burpPropertiesManager.getTargetPath());
@@ -826,7 +982,7 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraints.ipadx = 5;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagContainer.add(textField, gridBagConstraints);
 
         if (button != null) {
@@ -835,10 +991,10 @@ public class BurpExtender implements IBurpExtender, ITab
             gridBagConstraints.gridwidth = 1;
             gridBagConstraints.gridx = 3;
             gridBagConstraints.gridy = yPosition;
-            gridBagConstraints.ipadx = 5;
-            gridBagConstraints.ipady = 5;
+            //gridBagConstraints.ipadx = 5;
+            //gridBagConstraints.ipady = 5;
             gridBagConstraints.fill = GridBagConstraints.NONE;
-            gridBagConstraints.anchor = GridBagConstraints.NORTHEAST;
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
             gridBagContainer.add(button, gridBagConstraints);
         }
 

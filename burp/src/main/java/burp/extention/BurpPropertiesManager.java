@@ -47,6 +47,8 @@ public class BurpPropertiesManager extends PropertiesManager {
             TARGET_URL_KEY = "threadfix.target-url",
             SOURCE_FOLDER_KEY = "threadfix.source-folder",
             OLD_SOURCE_FOLDER_KEY = "threadfix.old-source-folder",
+            SERIALIZATION_KEY = "threadfix.serialization-file",
+            OLD_SERIALIZATION_KEY = "threadfix.old-serialization-file",
             CONFIG_FILE_KEY = "threadfix.config-file",
             TARGET_PORT_KEY = "threadfix.port",
             TARGET_PATH_KEY = "threadfix.path",
@@ -58,6 +60,9 @@ public class BurpPropertiesManager extends PropertiesManager {
 
         defaultPropertyValues.put(USE_HTTPS_KEY, "false");
         defaultPropertyValues.put(SOURCE_FOLDER_KEY, "");
+        defaultPropertyValues.put(OLD_SOURCE_FOLDER_KEY, "");
+        defaultPropertyValues.put(SERIALIZATION_KEY, "");
+        defaultPropertyValues.put(OLD_SERIALIZATION_KEY, "");
     }
 
     private static HashMap<RequestDecorator, IHttpService> requests = new HashMap<RequestDecorator, IHttpService>();
@@ -145,20 +150,21 @@ public class BurpPropertiesManager extends PropertiesManager {
         setPropertyValue(TARGET_URL_KEY, newTargetUrl);
     }
 
-    public String getSourceFolder() {
-        return getPropertyValue(SOURCE_FOLDER_KEY);
-    }
+    public String getSourceFolder() { return getPropertyValue(SOURCE_FOLDER_KEY); }
 
-    public void setSourceFolder(String newSourceFolder) {
-        setPropertyValue(SOURCE_FOLDER_KEY, newSourceFolder);
-    }
+    public void setSourceFolder(String newSourceFolder) { setPropertyValue(SOURCE_FOLDER_KEY, newSourceFolder); }
 
-    public String getOldSourceFolder() {
-        return getPropertyValue(OLD_SOURCE_FOLDER_KEY);
-    }
+    public String getOldSourceFolder() { return getPropertyValue(OLD_SOURCE_FOLDER_KEY); }
 
-    public void setOldSourceFolder(String newOldSourceFolder) { setPropertyValue(OLD_SOURCE_FOLDER_KEY, newOldSourceFolder);
-    }
+    public void setOldSourceFolder(String newOldSourceFolder) { setPropertyValue(OLD_SOURCE_FOLDER_KEY, newOldSourceFolder); }
+
+    public String getSerializationFile() { return getPropertyValue(SERIALIZATION_KEY); }
+
+    public void setSerializationFile(String newSerializationFile) { setPropertyValue(SERIALIZATION_KEY, newSerializationFile); }
+
+    public String getOldSerializationFile() { return getPropertyValue(OLD_SERIALIZATION_KEY); }
+
+    public void setOldSerializationFile(String newOldnewSerializationFile) { setPropertyValue(OLD_SERIALIZATION_KEY, newOldnewSerializationFile); }
 
     public String getConfigFile() {
         return getPropertyValue(CONFIG_FILE_KEY);
