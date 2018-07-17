@@ -55,9 +55,11 @@ import java.util.List;
  */
 public abstract class EndpointsButton extends JButton
 {
+    public static int mode;
     public static final String GENERIC_INT_SEGMENT = "\\{id\\}";
-    public EndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks)
+    public EndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks, int mode)
     {
+        this.mode = mode;
         setText(getButtonText());
         addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -75,7 +77,9 @@ public abstract class EndpointsButton extends JButton
                     {
                         EndpointDecorator[] endpoints = getEndpoints(view);
                         EndpointDecorator[] comparePoints = null;
-                        if(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder().trim().isEmpty())
+                        if(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder().trim().isEmpty() && mode == 0)
+                            comparePoints = getComparePoints(view);
+                        else if(BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile().trim().isEmpty() && mode == 1)
                             comparePoints = getComparePoints(view);
                         if (endpoints.length == 0)
                             JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
@@ -307,6 +311,7 @@ public abstract class EndpointsButton extends JButton
 
         return decorators;
     }
+
 
     protected abstract String getButtonText();
 

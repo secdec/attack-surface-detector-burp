@@ -40,7 +40,7 @@ import java.awt.*;
 
 public class LocalEndpointsButton extends EndpointsButton {
 
-    public LocalEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks); }
+    public LocalEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks, 0); }
 
     @Override
     protected String getButtonText() {

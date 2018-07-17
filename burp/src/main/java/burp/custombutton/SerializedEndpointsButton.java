@@ -46,7 +46,7 @@ import java.io.IOException;
 
 public class SerializedEndpointsButton extends EndpointsButton {
 
-    public SerializedEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks); }
+    public SerializedEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks, 1); }
 
     @Override
     protected String getButtonText() {
