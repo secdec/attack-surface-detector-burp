@@ -65,7 +65,11 @@ public abstract class EndpointsButton extends JButton
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e)
             {
-                boolean configured = ConfigurationDialogs.show(view, getDialogMode());
+                boolean configured = false;
+                if(mode == 0)
+                    configured = ConfigurationDialogs.showSource(view, getDialogMode());
+                else if(mode == 1)
+                    configured = ConfigurationDialogs.showJson(view, getDialogMode());
                 boolean makeReqs = true;
                 boolean completed = false;
                 java.util.List<String> nodes = new ArrayList<>();

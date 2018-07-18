@@ -39,7 +39,7 @@ public class ConfigurationDialogs
     public static enum DialogMode {SOURCE;}
 	public ConfigurationDialogs() {}
 	
-	public static boolean show(Component view, DialogMode mode)
+	public static boolean showSource(Component view, DialogMode mode)
     {
             boolean shouldContinue = (!BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder().trim().isEmpty());
             if(!shouldContinue)
@@ -205,5 +205,140 @@ public class ConfigurationDialogs
 
             return shouldContinue;
         }
+
+    public static boolean showJson(Component view, DialogMode mode)
+    {
+        boolean shouldContinue = (!BurpPropertiesManager.getBurpPropertiesManager().getSerializationFile().trim().isEmpty());
+        if(!shouldContinue)
+        {
+            JPanel sourcePanel = new JPanel();
+            JLabel sourcePanelLabel = new JLabel("Endpoint JSON to analyze: ");;
+            JTextField serializationField = new JTextField(30);
+            JTextField oldSerializationField = new JTextField(30);
+            oldSerializationField.setText(BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile());
+            IBurpExtenderCallbacks callbacks =  BurpPropertiesManager.getBurpPropertiesManager().getCallbacks();
+            callbacks.customizeUiComponent(serializationField);
+            final JButton sourceFolderBrowseButton = new JButton("Select JSON file ...");
+            sourceFolderBrowseButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    JFileChooser chooser = new JFileChooser();
+                    String currentDirectory = serializationField.getText();
+                    if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                        currentDirectory = System.getProperty("user.home");
+                    }
+                    chooser.setCurrentDirectory(new java.io.File(currentDirectory));
+                    chooser.setDialogTitle("Please select endpoint JSON file");
+                    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(false);
+                    chooser.addChoosableFileFilter( new FileNameExtensionFilter("*.json | JSON File", "json"));
+                    if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
+                        serializationField.setText(chooser.getSelectedFile().getAbsolutePath());
+                        BurpPropertiesManager.getBurpPropertiesManager().setSerializationFile(serializationField.getText());
+                    }
+                }
+            });
+            JLabel oldSerializationLabel = new JLabel("Comparison endpoint JSON (optional)");
+            final JButton oldSourceFolderBrowseButton = new JButton("Select JSON file ...");
+            oldSourceFolderBrowseButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    JFileChooser chooser2 = new JFileChooser();
+                    String currentDirectory = oldSerializationField.getText();
+                    if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                        currentDirectory = System.getProperty("user.home");
+                    }
+                    chooser2.setCurrentDirectory(new java.io.File(currentDirectory));
+                    chooser2.setDialogTitle("Please select endpoint JSON file");
+                    chooser2.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    chooser2.setAcceptAllFileFilterUsed(false);
+                    chooser2.addChoosableFileFilter( new FileNameExtensionFilter("*.json | JSON File", "json"));
+                    if (chooser2.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
+                        oldSerializationField.setText(chooser2.getSelectedFile().getAbsolutePath());
+                        BurpPropertiesManager.getBurpPropertiesManager().setOldSerializationFile(oldSerializationField.getText());
+                    }
+                }
+            });
+            GridBagLayout experimentLayout = new GridBagLayout();
+            GridBagConstraints labelConstraints = new GridBagConstraints();
+            labelConstraints.gridwidth = 1;
+            labelConstraints.gridx = 0;
+            labelConstraints.gridy = 0;
+            labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            GridBagConstraints textBoxConstraints = new GridBagConstraints();
+            textBoxConstraints.gridwidth = 4;
+            textBoxConstraints.gridx = 1;
+            textBoxConstraints.gridy = 0;
+            textBoxConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            GridBagConstraints browseButtonConstraints = new GridBagConstraints();
+            browseButtonConstraints.gridwidth = 1;
+            browseButtonConstraints.gridx = 5;
+            browseButtonConstraints.gridy = 0;
+            browseButtonConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            JPanel myPanel = new JPanel();
+            myPanel.setLayout(experimentLayout);
+            myPanel.add(sourcePanelLabel, labelConstraints);
+            myPanel.add(serializationField, textBoxConstraints);
+            myPanel.add(sourceFolderBrowseButton, browseButtonConstraints);
+
+            labelConstraints = new GridBagConstraints();
+            labelConstraints.gridwidth = 1;
+            labelConstraints.gridx = 0;
+            labelConstraints.gridy = 1;
+            labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            textBoxConstraints = new GridBagConstraints();
+            textBoxConstraints.gridwidth = 4;
+            textBoxConstraints.gridx = 1;
+            textBoxConstraints.gridy = 1;
+            textBoxConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            browseButtonConstraints = new GridBagConstraints();
+            browseButtonConstraints.gridwidth = 1;
+            browseButtonConstraints.gridx = 5;
+            browseButtonConstraints.gridy = 1;
+            browseButtonConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            myPanel.setLayout(experimentLayout);
+            myPanel.add(oldSerializationLabel, labelConstraints);
+            myPanel.add(oldSerializationField, textBoxConstraints);
+            myPanel.add(oldSourceFolderBrowseButton, browseButtonConstraints);
+
+            sourcePanel.setLayout(new GridBagLayout());
+            GridBagConstraints panelConstraints = new GridBagConstraints();
+            panelConstraints.gridwidth = 1;
+            panelConstraints.gridx = 0;
+            panelConstraints.gridy = 0;
+            panelConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+            sourcePanel.add(myPanel, panelConstraints);
+
+            int result = JOptionPane.showConfirmDialog(view,
+                    sourcePanel,
+                    "Please enter CLI JSON file location",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
+            if (result == JOptionPane.OK_OPTION)
+            {
+                String sourcePath = serializationField.getText();
+                String oldSourcePath = oldSerializationField.getText();
+                if(sourcePath != null && !sourcePath.trim().isEmpty())
+                {
+                    BurpPropertiesManager.getBurpPropertiesManager().setSerializationFile(sourcePath);
+                    BurpPropertiesManager.getBurpPropertiesManager().setOldSerializationFile(oldSourcePath);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+
+        return shouldContinue;
+    }
 	}
 
