@@ -487,7 +487,7 @@ public class BurpExtender implements IBurpExtender, ITab
 
         final JLabel sourcePanelTitle = addPanelTitleToGridBagLayout("Local Source Code", sourcePanel, yPosition++);
         final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("<html>This setting lets you configure the location of your source code.<br>For more information on supported frameworks and general usage click the link below:", sourcePanel, yPosition++);
-        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-zap/wiki\" target=\"https://github.com/secdec/attack-surface-detector-zap/wiki\">https://github.com/secdec/attack-surface-detector-zap/wiki</a></html>";
+        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-burp/wiki\" target=\"https://github.com/secdec/attack-surface-detector-burp/wiki\">https://github.com/secdec/attack-surface-detector-burp/wiki</a></html>";
         final JLabel linkLabel = addPanelDescriptionToGridBagLayout(link, sourcePanel, yPosition++);
         final JLabel differenceGeneratorDescription = addPanelDescriptionToGridBagLayout("<html><br>You can optionally choose to compare two different versions of the source code, and the Attack Surface Detector <br>will highlight endpoints and parameters that are new or modified in the newer version of the source code.</html>", sourcePanel, yPosition++);
         final JLabel sourcePanelDescription2 = addPanelDescriptionToGridBagLayout(" ", sourcePanel, yPosition++);
@@ -505,7 +505,7 @@ public class BurpExtender implements IBurpExtender, ITab
 
                         try {
 
-                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-zap/wiki");
+                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-burp/wiki");
 
                             desktop.browse(uri);
 
