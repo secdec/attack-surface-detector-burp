@@ -103,11 +103,13 @@ public class BurpExtender implements IBurpExtender, ITab
 
                 JPanel mainPanel = buildMainPanel();
                 JScrollPane mainScrollPane = new JScrollPane(mainPanel);
-                tabbedPane.addTab("Main", mainScrollPane);
+                tabbedPane.addTab("Main", null, mainScrollPane, "The main tab of the Attack Surface Detector which contains buttons to import endpoints and a table to view these endpoints");
 
                 JPanel optionsPanel = buildOptionsPanel();
                 JScrollPane optionsScrollPane = new JScrollPane(optionsPanel);
-                tabbedPane.addTab("Options", optionsScrollPane);
+                tabbedPane.addTab("Options", null, optionsScrollPane, "This tab allows the user to alter the configuration of the Attack Surface Detector");
+                tabbedPane.addTab("Help", null, buildHelpPanel(), "The information tab of the Attack Surface Detector which provides the user with useful information regarding supported formats and general usage");
+
 
                 // customize our UI components
                 callbacks.customizeUiComponent(tabbedPane);
@@ -269,7 +271,220 @@ public class BurpExtender implements IBurpExtender, ITab
 
         return optionsPanel;
     }
+    private JPanel buildHelpPanel()
+    {
 
+        JPanel helpPanel = new JPanel();
+        JScrollPane helpScroll = new JScrollPane(helpPanel);
+        JPanel helpBasePanel = new JPanel();
+        helpBasePanel.setLayout(new GridBagLayout());
+        Insets helpPanelInsets = new Insets(2, 0, 0, 0);
+        helpPanel.setLayout(new GridBagLayout());
+        int y = 0;
+
+        JPanel generalHelpPanel = buildGeneralHelpPanel();
+        GridBagConstraints generalHelpPanelConstraints = new GridBagConstraints();
+        generalHelpPanelConstraints.gridx = 0;
+        generalHelpPanelConstraints.gridy = y++;
+        generalHelpPanelConstraints.ipadx = 5;
+        generalHelpPanelConstraints.ipady = 5;
+        generalHelpPanelConstraints.insets = helpPanelInsets;
+        generalHelpPanelConstraints.weighty = 1;
+        generalHelpPanelConstraints.weightx = 1;
+        generalHelpPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        helpPanel.add(generalHelpPanel, generalHelpPanelConstraints);
+
+
+        JSeparator generalHelpPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        GridBagConstraints generalHelpPanelSeparatorConstraints = new GridBagConstraints();
+        generalHelpPanelSeparatorConstraints.gridx = 0;
+        generalHelpPanelSeparatorConstraints.gridy = y++;
+        generalHelpPanelSeparatorConstraints.insets = helpPanelInsets;
+        generalHelpPanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        generalHelpPanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        helpPanel.add(generalHelpPanelSeparator, generalHelpPanelSeparatorConstraints);
+
+        JPanel differenceGeneratorPanel = buildDifferenceGeneratorPanel();
+        GridBagConstraints differenceGeneratorConstraints = new GridBagConstraints();
+        differenceGeneratorConstraints.gridx = 0;
+        differenceGeneratorConstraints.gridy = y++;
+        differenceGeneratorConstraints.ipadx = 5;
+        differenceGeneratorConstraints.ipady = 5;
+        differenceGeneratorConstraints.insets = helpPanelInsets;
+        differenceGeneratorConstraints.weighty = 1;
+        differenceGeneratorConstraints.weightx = 1;
+        differenceGeneratorConstraints.anchor = GridBagConstraints.NORTHWEST;
+        helpPanel.add(differenceGeneratorPanel, differenceGeneratorConstraints);
+
+        JSeparator differenceGeneratorPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        GridBagConstraints differenceGeneratorSeparatorConstraints = new GridBagConstraints();
+        differenceGeneratorSeparatorConstraints.gridx = 0;
+        differenceGeneratorSeparatorConstraints.gridy = y++;
+        differenceGeneratorSeparatorConstraints.insets = helpPanelInsets;
+        differenceGeneratorSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        differenceGeneratorSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        helpPanel.add(differenceGeneratorPanelSeparator, differenceGeneratorSeparatorConstraints);
+
+
+        JPanel frameworkPanel = buildFrameworkPanel();
+        GridBagConstraints frameworkPanelConstraints = new GridBagConstraints();
+        frameworkPanelConstraints.gridx = 0;
+        frameworkPanelConstraints.gridy = y++;
+        frameworkPanelConstraints.ipadx = 5;
+        frameworkPanelConstraints.ipady = 5;
+        frameworkPanelConstraints.insets = helpPanelInsets;
+        frameworkPanelConstraints.weighty = 1;
+        frameworkPanelConstraints.weightx = 1;
+        frameworkPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        helpPanel.add(frameworkPanel, frameworkPanelConstraints);
+
+        JSeparator frameworkPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        GridBagConstraints frameworkPanelSeparatorConstraints = new GridBagConstraints();
+        frameworkPanelSeparatorConstraints.gridx = 0;
+        frameworkPanelSeparatorConstraints.gridy = y++;
+        frameworkPanelSeparatorConstraints.insets = helpPanelInsets;
+        frameworkPanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        frameworkPanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        helpPanel.add(frameworkPanelSeparator, frameworkPanelSeparatorConstraints);
+
+        JPanel fileFormatPanel = buildFileFormatPanel();
+        GridBagConstraints fileFormatConstraints = new GridBagConstraints();
+        fileFormatConstraints.gridx = 0;
+        fileFormatConstraints.gridy = y++;
+        fileFormatConstraints.ipadx = 5;
+        fileFormatConstraints.ipady = 5;
+        fileFormatConstraints.insets = helpPanelInsets;
+        fileFormatConstraints.anchor = GridBagConstraints.NORTHWEST;
+        helpPanel.add(fileFormatPanel, fileFormatConstraints);
+
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        helpBasePanel.add(helpScroll, gridBagConstraints);
+
+        return helpBasePanel;
+
+    }
+
+    private JPanel buildDifferenceGeneratorPanel()
+    {
+        JPanel differenceGeneratorPanel = new JPanel();
+        differenceGeneratorPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+        final JLabel differenceGeneratorPanelTitle = addPanelTitleToGridBagLayout("Attack Surface Difference Generator", differenceGeneratorPanel, yPosition++);
+        final JLabel differenceGeneratorDescription = addPanelDescriptionToGridBagLayout("<html>The Attack Surface Difference Generator is a feature of the Attack Surface Detector plugin that is when importing from both source code or JSON.<br>" +
+                " This feature is automatically enabled when two seperate versions of the same application are given on the configurations page and provides the following benefits:<html>" , differenceGeneratorPanel, yPosition++);
+
+        final JLabel listLabel = addPanelDescriptionToGridBagLayout("<html><li> Compares two versions highlighting the differences between endpoints" +
+                        " The results table will mark new or modified endpoints signifiny a change in the attack surface</li><br>" +
+                        "<li>Viewing the details of a modified endpoint will show which parameters have been added, modified or deleted including data types and names</li><br>" +
+                        "<li>Viewing the details of a new endpoint will display that the endpoint was not found in the previous version and show it's parameters if applicable</li></html>",
+                differenceGeneratorPanel, yPosition++);
+
+        return differenceGeneratorPanel;
+    }
+
+    private JPanel buildGeneralHelpPanel()
+    {
+        JPanel generalHelpPanel = new JPanel();
+        generalHelpPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+        final JLabel generalHelpPanelTitle = addPanelTitleToGridBagLayout("General Help", generalHelpPanel, yPosition++);
+        final JLabel generalHelpPanelDescription = addPanelDescriptionToGridBagLayout("<html>The purpose of this section is to aid in general Attack Surface Detector usage. For any information or questions not addressed below please visit the following link:</html>", generalHelpPanel, yPosition++);
+        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-burp/wiki\" target=\"https://github.com/secdec/attack-surface-detector-burp/wiki\">https://github.com/secdec/attack-surface-detector-burp/wiki</a></html>";
+        final JLabel linkLabel = addPanelDescriptionToGridBagLayout(link, generalHelpPanel, yPosition++);
+        linkLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        linkLabel.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getClickCount() > 0)
+                {
+                    if (Desktop.isDesktopSupported())
+                    {
+                        Desktop desktop = Desktop.getDesktop();
+                        try
+                        {
+                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-burp/wiki");
+                            desktop.browse(uri);
+                        }
+                        catch (IOException ex) { }
+                        catch (URISyntaxException ex) { }
+                    }
+                    else { }
+                }
+            }
+        });
+
+        final JLabel importLabel = addPanelDescriptionToGridBagLayout("<html><li> Selecting \"Import Endpoints from Source\" or \"Import Endpoints from CLI JSON\" without" +
+                        " configuring target and/or source/JSON location respectively <br>will show a configuration dialog prompting the user to do so</li><br>" +
+                        "<li> To import endpoints in order to view their details without attacking the webapplication simply leave the target configuration empty and select submit on the pop up dialog</li><br>" +
+                        "<li> To view the details of a specific endpoint simply click on an endpoint listed in the endpoints table of the main page</li><br></html>",
+                generalHelpPanel, yPosition++);
+
+        return generalHelpPanel;
+    }
+
+    private JPanel buildFrameworkPanel()
+    {
+        JPanel frameworkPanel = new JPanel();
+        frameworkPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+        final JLabel frameworkPanelTitle = addPanelTitleToGridBagLayout("Supported Frameworks", frameworkPanel, yPosition++);
+        final JLabel frameworkPanelDescription = addPanelDescriptionToGridBagLayout("<html>The Attack Surface Detector uses static code analysis to identify web app endpoints by parsing routes and identifying parameters.<br> The following is a list of the supported languages and frameworks:</html>", frameworkPanel, yPosition++);
+        final JLabel frameworksList = addPanelDescriptionToGridBagLayout("<html><li>C# / ASP.NET MVC </li><br>" +
+                "<li>C# / Web Forms </li><br>" +
+                "<li>Java / Spring MVC </li><br>" +
+                "<li>Java / Struts </li><br>" +
+                "<li>Java / JSP </li><br>" +
+                "<li>Python / Django </li><br>" +
+                "<li>Ruby / Rails <br></li></html>", frameworkPanel, yPosition++);
+
+        return frameworkPanel;
+    }
+
+    private JPanel buildFileFormatPanel()
+    {
+        JPanel fileFormatPanel = new JPanel();
+        fileFormatPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+        final JLabel fileFormatPanelTitle = addPanelTitleToGridBagLayout("Accepted File Formats", fileFormatPanel, yPosition++);
+        final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("<html>When importing endpoints from source code the accepted formats are as follows:</html>", fileFormatPanel, yPosition++);
+        final JLabel zipFormatList = addPanelDescriptionToGridBagLayout("<html><li>Zip file | *.zip: A compresed version of a source code folder</li><br>" +
+                "<li>War file | *.war: A .war file that contains compiled source code</li><br>"  +
+                "<li>Directory | dir: A directory containing the source code of a supported framework</li><br></html>", fileFormatPanel, yPosition++);
+        final JLabel jsonPanelDescription = addPanelDescriptionToGridBagLayout("<html>When importing endpoints from CLI JSON you must first have a serialized Attack Surface Detector-CLI JSON output file.  <br>To locate this tool and for general usage visit the Attack Surface Detector-CLI github page located below:</html>",fileFormatPanel, yPosition++);
+        String link = "<html><a href=\"https://github.com/secdec/attack-surface-detector-cli\" target=\"https://github.com/secdec/attack-surface-detector-cli\">https://github.com/secdec/attack-surface-detector-cli</a></html>";
+        final JLabel linkLabel = addPanelDescriptionToGridBagLayout(link, fileFormatPanel, yPosition++);
+        linkLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        linkLabel.addMouseListener(new MouseAdapter()
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getClickCount() > 0)
+                {
+                    if (Desktop.isDesktopSupported())
+                    {
+                        Desktop desktop = Desktop.getDesktop();
+                        try
+                        {
+                            URI uri = new URI("https://github.com/secdec/attack-surface-detector-cli");
+                            desktop.browse(uri);
+                        }
+                        catch (IOException ex) { }
+                        catch (URISyntaxException ex) { }
+                    }
+                    else { }
+                }
+            }
+        });
+
+        return fileFormatPanel;
+    }
 
     private JPanel buildDisplayPane()
     {
