@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class BurpPropertiesManager extends PropertiesManager {
-    private static BurpPropertiesManager instance = null;
 
     public static final String
             TARGET_URL_KEY = "threadfix.target-url",
@@ -75,9 +74,8 @@ public class BurpPropertiesManager extends PropertiesManager {
     private static JTable endpointsTable;
     private static JLabel countLabel;
     private static boolean generated = false;
-    //private static JCheckBox httpsField;
 
-    public static boolean
+    protected static boolean
             AUTO_SCAN_KEY = false,
             AUTO_SPIDER_KEY = false;
 
@@ -94,7 +92,6 @@ public class BurpPropertiesManager extends PropertiesManager {
     }
 
     public static BurpPropertiesManager getBurpPropertiesManager() {
-        //return instance;
         return new BurpPropertiesManager(callbacks);
     }
 
@@ -142,7 +139,6 @@ public class BurpPropertiesManager extends PropertiesManager {
 
 
     public String getTargetUrl() {
-        //return getPropertyValue(TARGET_URL_KEY);
         if (getUseHttps())
             return "https://" + getPropertyValue(TARGET_HOST_KEY)  + ":" + getPropertyValue(TARGET_PORT_KEY) + "/" + getPropertyValue(TARGET_PATH_KEY);
         else
@@ -214,10 +210,6 @@ public class BurpPropertiesManager extends PropertiesManager {
 
     public IBurpExtenderCallbacks getCallbacks(){return callbacks;}
 
-    //public JCheckBox getUseHttpsField() {return httpsField;}
-
-    //public void setUseHttpsField(JCheckBox newField){httpsField = newField;}
-
     public boolean getUseHttps()
     {
         if(getPropertyValue(USE_HTTPS_KEY).equalsIgnoreCase("true"))
@@ -231,12 +223,10 @@ public class BurpPropertiesManager extends PropertiesManager {
         if(newUseHttp)
         {
             setPropertyValue(USE_HTTPS_KEY, "true");
-            //httpsField.setSelected(true);
         }
         else
         {
             setPropertyValue(USE_HTTPS_KEY, "false");
-            //httpsField.setSelected(false);
         }
     }
 

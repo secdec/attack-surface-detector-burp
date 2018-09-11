@@ -70,9 +70,7 @@ public class BurpExtender implements IBurpExtender, ITab
     private JCheckBox autoScanField;
     private JCheckBox autoSpiderField;
     private JCheckBox useHttpField;
-    private JLabel profMessage;
     private JLabel autoScanText;
-    //private JTextArea displayArea = new JTextArea();
     private JLabel displayArea = new JLabel();
 
     //
@@ -1001,7 +999,7 @@ public class BurpExtender implements IBurpExtender, ITab
         {
             autoScanField = addCheckBoxToGridBagLayout(autoScanText, autoOptionsPanel, yPosition++, applicationCheckBoxScanActionListener);
             autoScanField.setEnabled(false);
-            profMessage = addPanelLabelToGridBagLayout("\t *Note this option is only available with the Pro Version", autoOptionsPanel, yPosition++);
+            addPanelLabelToGridBagLayout("\t *Note this option is only available with the Pro Version", autoOptionsPanel, yPosition++);
         }
 
         return autoOptionsPanel;
@@ -1159,10 +1157,6 @@ public class BurpExtender implements IBurpExtender, ITab
 
     private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey) {
         return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, null);
-    }
-
-    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadFixPropertyFieldListenerRunnable) {
-        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadFixPropertyFieldListenerRunnable, null);
     }
 
     private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, JButton button) {
