@@ -40,6 +40,7 @@ public class RequestMakerThread implements Runnable
     public RequestMakerThread(IBurpExtenderCallbacks callbacks, Component view)
     {
         this.callbacks = callbacks;
+        this.view = view;
     }
 
     public void run()

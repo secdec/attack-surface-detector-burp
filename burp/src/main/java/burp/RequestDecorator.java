@@ -6,18 +6,15 @@ public class RequestDecorator {
 
     public RequestDecorator(byte[] request, EndpointDecorator.Status modified)
     {
-        this.request = request;
+        this.request = request.clone();
         this.modified = modified;
     }
 
-    public byte[] getRequest()
-    {
-        return request;
-    }
+    public byte[] getRequest() { return request.clone(); }
 
     public void setRequest(byte[] request)
     {
-        this.request = request;
+        this.request = request.clone();
     }
 
     public EndpointDecorator.Status getModified()

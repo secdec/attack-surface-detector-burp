@@ -63,6 +63,9 @@ public class BurpPropertiesManager extends PropertiesManager {
         defaultPropertyValues.put(OLD_SOURCE_FOLDER_KEY, "");
         defaultPropertyValues.put(SERIALIZATION_KEY, "");
         defaultPropertyValues.put(OLD_SERIALIZATION_KEY, "");
+        defaultPropertyValues.put(TARGET_PATH_KEY, "");
+        defaultPropertyValues.put(TARGET_PORT_KEY, "");
+        defaultPropertyValues.put(TARGET_HOST_KEY, "");
     }
 
     private static HashMap<RequestDecorator, IHttpService> requests = new HashMap<RequestDecorator, IHttpService>();
@@ -70,8 +73,9 @@ public class BurpPropertiesManager extends PropertiesManager {
     private static Properties properties = new Properties();
     private static boolean hasChanges = false;
     private static JTable endpointsTable;
-    private  static JLabel countLabel;
-    private static JCheckBox httpsField;
+    private static JLabel countLabel;
+    private static boolean generated = false;
+    //private static JCheckBox httpsField;
 
     public static boolean
             AUTO_SCAN_KEY = false,
@@ -83,15 +87,15 @@ public class BurpPropertiesManager extends PropertiesManager {
     }
 
     public static BurpPropertiesManager generateBurpPropertiesManager(IBurpExtenderCallbacks callbacks) {
-        if (instance == null) {
-            instance = new BurpPropertiesManager(callbacks);
-            return instance;
+        if (!generated) {
+            return new BurpPropertiesManager(callbacks);
         }
         throw new RuntimeException("A BurpPropertiesManager already exists.");
     }
 
     public static BurpPropertiesManager getBurpPropertiesManager() {
-        return instance;
+        //return instance;
+        return new BurpPropertiesManager(callbacks);
     }
 
     public String getPropertyValue(String key) {
@@ -210,9 +214,9 @@ public class BurpPropertiesManager extends PropertiesManager {
 
     public IBurpExtenderCallbacks getCallbacks(){return callbacks;}
 
-    public JCheckBox getUseHttpsField() {return httpsField;}
+    //public JCheckBox getUseHttpsField() {return httpsField;}
 
-    public void setUseHttpsField(JCheckBox newField){httpsField = newField;}
+    //public void setUseHttpsField(JCheckBox newField){httpsField = newField;}
 
     public boolean getUseHttps()
     {
@@ -227,12 +231,12 @@ public class BurpPropertiesManager extends PropertiesManager {
         if(newUseHttp)
         {
             setPropertyValue(USE_HTTPS_KEY, "true");
-            httpsField.setSelected(true);
+            //httpsField.setSelected(true);
         }
         else
         {
             setPropertyValue(USE_HTTPS_KEY, "false");
-            httpsField.setSelected(false);
+            //httpsField.setSelected(false);
         }
     }
 

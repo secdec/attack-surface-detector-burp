@@ -72,9 +72,10 @@ public class UrlDialog {
 
         ActionListener applicationCheckBoxHttpActionListener = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 BurpPropertiesManager.getBurpPropertiesManager().setUseHttps(httpsField.isSelected());
-                BurpPropertiesManager.getBurpPropertiesManager().getUseHttpsField().setSelected(true);
+                //BurpPropertiesManager.getBurpPropertiesManager().getUseHttpsField().setSelected(true);
             }
         };
 
@@ -212,18 +213,25 @@ public class UrlDialog {
             }
             if (url != null && !url.isEmpty())
             {
-                burpPropertiesManager.setTargetUrl(url);
-                burpPropertiesManager.setTargetPort(port);
-                burpPropertiesManager.setTargetHost(host);
-                burpPropertiesManager.setTargetPath(path);
+                if (url != null)
+                    burpPropertiesManager.setTargetUrl(url);
+                if (port != null)
+                    burpPropertiesManager.setTargetPort(port);
+                if (host != null)
+                    burpPropertiesManager.setTargetHost(host);
+                if (path != null)
+                    burpPropertiesManager.setTargetPath(path);
             }
             else
             {
-                burpPropertiesManager.setTargetUrl(url);
-                burpPropertiesManager.setTargetPort(port);
-                burpPropertiesManager.setTargetHost(host);
-                burpPropertiesManager.setTargetPath(path);
-               // burpPropertiesManager.setUseHttps(https);
+                if (url != null)
+                    burpPropertiesManager.setTargetUrl(url);
+                if (port != null)
+                    burpPropertiesManager.setTargetPort(port);
+                if (host != null)
+                    burpPropertiesManager.setTargetHost(host);
+                if (path != null)
+                    burpPropertiesManager.setTargetPath(path);
                 return null;
             }
             return url;

@@ -85,9 +85,8 @@ public class BurpExtender implements IBurpExtender, ITab
         // keep a reference to our callbacks object
         this.callbacks = callbacks;
 
-        BurpPropertiesManager.generateBurpPropertiesManager(callbacks);
-
         // obtain an extension helpers object
+        BurpPropertiesManager.generateBurpPropertiesManager(callbacks);
         helpers = callbacks.getHelpers();
 
         // set our extension name
@@ -945,7 +944,7 @@ public class BurpExtender implements IBurpExtender, ITab
         targetPathField = addTextFieldToGridBagLayout("Path (optional):", targetPanel, yPosition++, BurpPropertiesManager.TARGET_PATH_KEY);
         useHttpField = addCheckBoxToGridBagLayout("Use HTTPS", targetPanel, yPosition++, applicationCheckBoxHttpActionListener);
         useHttpField.setSelected(BurpPropertiesManager.getBurpPropertiesManager().getUseHttps());
-        BurpPropertiesManager.getBurpPropertiesManager().setUseHttpsField(useHttpField);
+        //BurpPropertiesManager.getBurpPropertiesManager().setUseHttpsField(useHttpField);
         PlainDocument portDoc = (PlainDocument)targetPortField.getDocument();
         portDoc.setDocumentFilter(new PortFilter());
         return targetPanel;
