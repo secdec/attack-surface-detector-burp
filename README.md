@@ -24,7 +24,7 @@ To see a brief demonstration for the Attack Surface Detector, you can check it o
 ### Burp Suite Professional
 * Scanner functionality available.
 * The plugin will run source code analysis and seed endpoints into the target sitemap, and optionally run the spider and active scanning functionality.
-### Burp Suite Free
+### Burp Suite Community
 * Scanner unavailable
 * Plugin will run source code analysis and send seeded endpoints to *Target* and *Spider*; Scanner will not run
 
