@@ -149,7 +149,7 @@ public abstract class EndpointsButton extends JButton
                     }
                     catch(Exception ex)
                     {
-                        JOptionPane.showMessageDialog(view, "An error occurred processing input. Please check input");
+                        JOptionPane.showMessageDialog(view, getErrorMessage());
                     }
                 }
                 else
@@ -322,6 +322,8 @@ public abstract class EndpointsButton extends JButton
     protected abstract String getNoEndpointsMessage();
 
     protected abstract String getCompletedMessage();
+
+    protected abstract String getErrorMessage();
 
     protected abstract ConfigurationDialogs.DialogMode getDialogMode();
 

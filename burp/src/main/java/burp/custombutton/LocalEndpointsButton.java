@@ -39,6 +39,7 @@ import javax.swing.JOptionPane;
 import java.awt.*;
 
 public class LocalEndpointsButton extends EndpointsButton {
+    private String errorMessage = "An error occurred processing input. Please check input";
 
     public LocalEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks, 0); }
 
@@ -59,7 +60,11 @@ public class LocalEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected EndpointDecorator[] getEndpoints(final Component view) {
+    protected  String getErrorMessage() {return errorMessage;}
+
+    @Override
+    protected EndpointDecorator[] getEndpoints(final Component view)
+    {
         EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder());
         EndpointDecorator[] endpoints = null;
         if (endpointDatabase != null)
@@ -69,7 +74,7 @@ public class LocalEndpointsButton extends EndpointsButton {
             endpoints = new EndpointDecorator[endpointList.size()];
             int i = 0;
             for (Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
+                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint, false));
         }
         return endpoints;
     }
@@ -86,7 +91,7 @@ public class LocalEndpointsButton extends EndpointsButton {
             endpoints = new EndpointDecorator[endpointList.size()];
             int i = 0;
             for (Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
+                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint, false));
         }
         return endpoints;
     }

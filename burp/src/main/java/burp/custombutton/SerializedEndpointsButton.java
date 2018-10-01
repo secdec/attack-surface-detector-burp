@@ -30,12 +30,17 @@ import burp.EndpointDecorator;
 import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
 import burp.extention.BurpPropertiesManager;
+import com.denimgroup.threadfix.data.entities.RouteParameter;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import com.denimgroup.threadfix.framework.engine.EndpointSerializer;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointSerialization;
-import com.denimgroup.threadfix.framework.util.EndpointUtil;
+
+import com.denimgroup.threadfix.framework.engine.full.RouteParameterDeserializer;
+import org.codehaus.jackson.Version;
+import org.codehaus.jackson.map.module.SimpleModule;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonMethod;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
 
 import javax.swing.JOptionPane;
 import java.awt.*;
@@ -44,9 +49,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 public class SerializedEndpointsButton extends EndpointsButton {
 
-    public SerializedEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks, 1); }
+    private Component view;
+
+    private String errorMessage;
+
+    public SerializedEndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) { super(view, callbacks, 1); this.view = view; }
 
     @Override
     protected String getButtonText() {
@@ -54,10 +64,13 @@ public class SerializedEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected String getNoEndpointsMessage() { return "Failed to retrieve endpoints from the source. Check your source folder location."; }
+    protected String getNoEndpointsMessage() { return "Failed to retrieve endpoints from the source. Check your JSON file."; }
 
     @Override
-    protected String getCompletedMessage() { return "The endpoints were successfully generated from source."; }
+    protected String getCompletedMessage() { return "The endpoints were successfully generated from JSON."; }
+
+    @Override
+    protected  String getErrorMessage() {return errorMessage;}
 
     @Override
     protected ConfigurationDialogs.DialogMode getDialogMode() {
@@ -77,20 +90,34 @@ public class SerializedEndpointsButton extends EndpointsButton {
             fis.read(data);
             fis.close();
             String endpointsStr = new String(data, "UTF-8");
-            Endpoint[] endpointList = EndpointSerialization.deserializeAll(endpointsStr);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setVisibility(JsonMethod.ALL, JsonAutoDetect.Visibility.NONE);
+            objectMapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+            SimpleModule module = new SimpleModule("RouteParameterDeserializer", Version.unknownVersion());
+            module.addDeserializer(RouteParameter.class, new RouteParameterDeserializer());
+            objectMapper.registerModule(module);
+            Endpoint.Info[] endpointList = objectMapper.readValue(endpointsStr, TypeFactory.defaultInstance().constructArrayType(Endpoint.Info.class));
             endpoints = new EndpointDecorator[endpointList.length];
-            int i = 0;
-            for(Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
+            for(int i = 0; i < endpointList.length; i++ )
+            {
+                endpoints[i] = new EndpointDecorator(endpointList[i]);
+            }
 
         }
         catch(FileNotFoundException ex)
         {
             System.out.println("Unable to open file '" + fileName + "'");
+            errorMessage = "Unable to open file '" + fileName + "'";
         }
         catch(IOException ex)
         {
-            System.out.println("Error reading file '" + fileName + "'");
+            System.out.println("Error reading file '" + fileName + "'" + ex.toString());
+            errorMessage = "The JSON file is either corrupt or is using an old format." + "\n" + "Please regenerate your JSON file using the latest version of the Attack Surface Detector CLI Tool.";
+        }
+        catch (Exception e)
+        {
+            System.out.println("An error occurred processing input. Please check input" + e.toString());
+            errorMessage = "An error occurred processing input. Please check input";
         }
         return endpoints;
     }
@@ -109,20 +136,34 @@ public class SerializedEndpointsButton extends EndpointsButton {
             fis.read(data);
             fis.close();
             String endpointsStr = new String(data, "UTF-8");
-            Endpoint[] endpointList = EndpointSerialization.deserializeAll(endpointsStr);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setVisibility(JsonMethod.ALL, JsonAutoDetect.Visibility.NONE);
+            objectMapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+            SimpleModule module = new SimpleModule("RouteParameterDeserializer", Version.unknownVersion());
+            module.addDeserializer(RouteParameter.class, new RouteParameterDeserializer());
+            objectMapper.registerModule(module);
+            Endpoint.Info[] endpointList = objectMapper.readValue(endpointsStr, TypeFactory.defaultInstance().constructArrayType(Endpoint.Info.class));
             endpoints = new EndpointDecorator[endpointList.length];
-            int i = 0;
-            for(Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint));
+            for(int i = 0; i < endpointList.length; i++ )
+            {
+                endpoints[i] = new EndpointDecorator(endpointList[i]);
+            }
 
         }
         catch(FileNotFoundException ex)
         {
-            System.out.println("Unable to open file '" + fileName + "'");
+            System.out.println("Unable to open comparison file '" + fileName + "'");
+            JOptionPane.showMessageDialog(view, "Unable to open comparison file '" + fileName + "'");
         }
         catch(IOException ex)
         {
-            System.out.println("Error reading file '" + fileName + "'");
+            System.out.println("Error reading comparison file '" + fileName + "'" + ex.toString());
+            JOptionPane.showMessageDialog(view, "The JSON file for your comparison endpoints is either corrupt or is using an old format." + "\n" + "Please regenerate your JSON file using the latest version of the Attack Surface Detector CLI Tool.");
+        }
+        catch (Exception e)
+        {
+            System.out.println("An error occurred processing comparison file. Please check input" + e.toString());
+            JOptionPane.showMessageDialog(view, "An error occurred processing comparison file. Please check input");
         }
         return endpoints;
     }
