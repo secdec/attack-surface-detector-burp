@@ -30,13 +30,19 @@ import burp.EndpointDecorator;
 import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
 import burp.extention.BurpPropertiesManager;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.framework.engine.full.TemporaryExtractionLocation;
 import com.denimgroup.threadfix.framework.util.EndpointUtil;
+import java.io.File;
 
 import javax.swing.JOptionPane;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalEndpointsButton extends EndpointsButton {
     private String errorMessage = "An error occurred processing input. Please check input";
@@ -63,36 +69,54 @@ public class LocalEndpointsButton extends EndpointsButton {
     protected  String getErrorMessage() {return errorMessage;}
 
     @Override
-    protected EndpointDecorator[] getEndpoints(final Component view)
+    protected EndpointDecorator[] getEndpoints(final Component view, boolean compare)
     {
-        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder());
-        EndpointDecorator[] endpoints = null;
-        if (endpointDatabase != null)
+        String sourceFolder;
+        if (compare)
         {
-            java.util.List<Endpoint> endpointList = endpointDatabase.generateEndpoints();
-            endpointList = EndpointUtil.flattenWithVariants(endpointList);
-            endpoints = new EndpointDecorator[endpointList.size()];
-            int i = 0;
-            for (Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint, false));
+            sourceFolder = BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder();
+        }
+        else
+        {
+            sourceFolder = BurpPropertiesManager.getBurpPropertiesManager().getSourceFolder();
+        }
+        File file= new File(sourceFolder);
+        TemporaryExtractionLocation zipExtractor = null;
+        if (TemporaryExtractionLocation.isArchive(sourceFolder)) {
+            zipExtractor = new TemporaryExtractionLocation(sourceFolder);
+            zipExtractor.extract();
+
+            file = zipExtractor.getOutputPath();
+        }
+
+        List<FrameworkType> frameworks = FrameworkCalculator.getTypes(file);
+        ArrayList<List<Endpoint>> endpointsListList =new ArrayList<>(frameworks.size());
+        EndpointDecorator[] endpoints = null;
+        int decSize = 0;
+        for (FrameworkType framework :  frameworks)
+        {
+            EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(file, framework);
+            if(endpointDatabase != null)
+            {
+                List<Endpoint> endpointsList = EndpointUtil.flattenWithVariants(endpointDatabase.generateEndpoints());
+                endpointsListList.add(endpointsList);
+                decSize += endpointsList.size();
+            }
+        }
+        endpoints = new EndpointDecorator[decSize];
+        int pos = 0;
+        for(List<Endpoint> endpointList: endpointsListList)
+        {
+            for(Endpoint endpoint : endpointList)
+            {
+                endpoints[pos++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint, false));
+            }
+        }
+
+        if (zipExtractor != null) {
+            zipExtractor.release();
         }
         return endpoints;
     }
 
-    @Override
-    protected EndpointDecorator[] getComparePoints(final Component view)
-    {
-        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder());
-        EndpointDecorator[] endpoints = null;
-        if (endpointDatabase != null)
-        {
-            java.util.List<Endpoint> endpointList = endpointDatabase.generateEndpoints();
-            endpointList = EndpointUtil.flattenWithVariants(endpointList);
-            endpoints = new EndpointDecorator[endpointList.size()];
-            int i = 0;
-            for (Endpoint endpoint : endpointList)
-                endpoints[i++] = new EndpointDecorator(Endpoint.Info.fromEndpoint(endpoint, false));
-        }
-        return endpoints;
-    }
 }

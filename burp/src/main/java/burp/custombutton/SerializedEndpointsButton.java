@@ -78,10 +78,17 @@ public class SerializedEndpointsButton extends EndpointsButton {
     }
 
     @Override
-    protected EndpointDecorator[] getEndpoints(final Component view) {
+    protected EndpointDecorator[] getEndpoints(final Component view, boolean compare) {
         EndpointDecorator[] endpoints = null;
-        String fileName = BurpPropertiesManager.getBurpPropertiesManager().getSerializationFile();
-
+        String fileName;
+        if(compare)
+        {
+            fileName = BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile();
+        }
+        else
+        {
+            fileName = BurpPropertiesManager.getBurpPropertiesManager().getSerializationFile();
+        }
         try
         {
             File file = new File(fileName);
@@ -122,50 +129,5 @@ public class SerializedEndpointsButton extends EndpointsButton {
         return endpoints;
     }
 
-    @Override
-    protected EndpointDecorator[] getComparePoints(final Component view)
-    {
-        EndpointDecorator[] endpoints = null;
-        String fileName = BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile();
-
-        try
-        {
-            File file = new File(fileName);
-            FileInputStream fis = new FileInputStream(file);
-            byte[] data = new byte[(int) file.length()];
-            fis.read(data);
-            fis.close();
-            String endpointsStr = new String(data, "UTF-8");
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setVisibility(JsonMethod.ALL, JsonAutoDetect.Visibility.NONE);
-            objectMapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-            SimpleModule module = new SimpleModule("RouteParameterDeserializer", Version.unknownVersion());
-            module.addDeserializer(RouteParameter.class, new RouteParameterDeserializer());
-            objectMapper.registerModule(module);
-            Endpoint.Info[] endpointList = objectMapper.readValue(endpointsStr, TypeFactory.defaultInstance().constructArrayType(Endpoint.Info.class));
-            endpoints = new EndpointDecorator[endpointList.length];
-            for(int i = 0; i < endpointList.length; i++ )
-            {
-                endpoints[i] = new EndpointDecorator(endpointList[i]);
-            }
-
-        }
-        catch(FileNotFoundException ex)
-        {
-            System.out.println("Unable to open comparison file '" + fileName + "'");
-            JOptionPane.showMessageDialog(view, "Unable to open comparison file '" + fileName + "'");
-        }
-        catch(IOException ex)
-        {
-            System.out.println("Error reading comparison file '" + fileName + "'" + ex.toString());
-            JOptionPane.showMessageDialog(view, "The JSON file for your comparison endpoints is either corrupt or is using an old format." + "\n" + "Please regenerate your JSON file using the latest version of the Attack Surface Detector CLI Tool.");
-        }
-        catch (Exception e)
-        {
-            System.out.println("An error occurred processing comparison file. Please check input" + e.toString());
-            JOptionPane.showMessageDialog(view, "An error occurred processing comparison file. Please check input");
-        }
-        return endpoints;
-    }
 }
 

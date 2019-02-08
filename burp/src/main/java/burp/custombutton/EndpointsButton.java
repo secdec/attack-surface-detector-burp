@@ -79,12 +79,12 @@ public abstract class EndpointsButton extends JButton
                         callbacks.loadConfigFromJson(getBurpConfigAsString());
                     try
                     {
-                        EndpointDecorator[] endpoints = getEndpoints(view);
+                        EndpointDecorator[] endpoints = getEndpoints(view, false);
                         EndpointDecorator[] comparePoints = null;
                         if(BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSourceFolder().trim().isEmpty() && mode == 0)
-                            comparePoints = getComparePoints(view);
+                            comparePoints = getEndpoints(view, true);
                         else if(BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile()!= null && !BurpPropertiesManager.getBurpPropertiesManager().getOldSerializationFile().trim().isEmpty() && mode == 1)
-                            comparePoints = getComparePoints(view);
+                            comparePoints = getEndpoints(view, true);
                         if (endpoints.length == 0)
                             JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                         else
@@ -327,7 +327,7 @@ public abstract class EndpointsButton extends JButton
 
     protected abstract ConfigurationDialogs.DialogMode getDialogMode();
 
-    protected abstract EndpointDecorator[] getEndpoints(final Component view);
+    protected abstract EndpointDecorator[] getEndpoints(final Component view, boolean compare);
 
-    protected abstract EndpointDecorator[] getComparePoints(final Component view);
+
 }
