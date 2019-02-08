@@ -95,7 +95,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>attacksurfacedetector-release-1.12</finalName>
+                    <finalName>attacksurfacedetector-release-1.13</finalName>
                 </configuration>
                 <executions>
                     <execution>
