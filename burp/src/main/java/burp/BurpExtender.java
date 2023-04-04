@@ -492,6 +492,7 @@ public class BurpExtender implements IBurpExtender, ITab
         panelTitle.setHorizontalAlignment(SwingConstants.LEFT);
         JPanel basePanel = new JPanel();
         basePanel.setLayout(new BorderLayout());
+        displayArea.putClientProperty("html.disable", null);
         //displayArea.setText("\n" + "\n" + "\n" + "\n" + "\n" + "\n");
         callbacks.customizeUiComponent(displayArea);
         //displayArea.setEditable(false);
@@ -1124,6 +1125,7 @@ public class BurpExtender implements IBurpExtender, ITab
 
     private JLabel addPanelDescriptionToGridBagLayout(String descriptionText, Container gridBagContainer, int yPosition) {
         final JLabel panelDescription = new JLabel(descriptionText);
+        panelDescription.putClientProperty("html.disable", null);
         panelDescription.setHorizontalAlignment(SwingConstants.LEFT);
         callbacks.customizeUiComponent(panelDescription);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
